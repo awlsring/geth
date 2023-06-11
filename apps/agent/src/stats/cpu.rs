@@ -64,24 +64,6 @@ impl CPU {
         }
     }
 
-    pub fn print_debug(&self) {
-        println!("CPU Debug:");
-        println!("  Architecture: {}", self.architecture);
-        println!("  Vendor: {}", self.vendor);
-        println!("  Brand: {}", self.brand);
-        println!("  Core Count: {}", self.core_count);
-        println!("  Cores:");
-        for (_, core) in &self.cores {
-            println!("    Core: {}", core.name);
-            println!("      Frequency: {}", core.frequency);
-            println!("      Usage: {}", core.usage);
-        }
-    }
-
-    pub fn get_core(&self, name: &str) -> Option<&Core> {
-        self.cores.get(name)
-    }
-
     pub fn update(&mut self, system: &System) {
         for cpu in system.cpus() {
             let core = Core {

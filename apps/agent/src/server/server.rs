@@ -1,16 +1,12 @@
 use std::{net::SocketAddr, sync::Arc};
 
-use aws_smithy_client::erase::{DynConnector, DynMiddleware};
-use aws_smithy_http::endpoint::{SharedEndpointResolver, Endpoint};
 use aws_smithy_http_server::{
     extension::OperationExtensionExt,
     instrumentation::InstrumentExt,
     plugin::{alb_health_check::AlbHealthCheckLayer, PluginPipeline},
     request::request_id::ServerRequestIdProviderLayer,
-    AddExtensionLayer, Extension,
+    AddExtensionLayer,
 };
-
-use aws_smithy_runtime::client::orchestrator::endpoints::{StaticUriEndpointResolver, StaticUriEndpointResolverParams};
 
 use clap::Parser;
 use tokio::sync::Mutex;
@@ -18,14 +14,11 @@ use crate::stats::controller::SystemController;
 
 use super::plugin::PrintExt;
 
-use hyper::{StatusCode, Uri};
+use hyper::{StatusCode};
 
-use geth_agent_server::{GethAgent, model::SystemSummary};
+use geth_agent_server::{GethAgent};
 use geth_agent_server::{input, output, error};
-use geth_agent_server::input::{HealthInput};
-use geth_agent_server::output::{HealthOutput};
 
-mod operation;
 use super::operation::overview::get_overview;
 use super::operation::system::get_system;
 use super::operation::memory::get_memory;
@@ -35,46 +28,7 @@ use super::operation::disk::list_disks;
 use super::operation::network::get_network_interface;
 use super::operation::network::list_network_interfaces;
 use super::operation::cpu::get_cpu;
-// async fn client() {
-//     let smithy_client = Builder::new()
-//         // Use the default HTTPS connector
-//         .dyn_https_connector(Default::default())
-//         // Use a no-op middleware
-//         .middleware_fn(|request| request)
-//         // Build a type-erased Smithy client
-//         .build_dyn();
 
-//     let c = SharedEndpointResolver::new("http://127.0.0.1:13734");
-//     let config = geth_agent_client::Config::builder()
-//         .endpoint_resolver(c)
-//         .api_key(AuthApiKey::from("1234567890"))
-//         .build();
-
-//     let client = geth_agent_client::Client::with_config(smithy_client, config);
-
-//     let resp = client.health().send().await.unwrap();
-//     resp.success;
-// }
-
-// pub fn build_client() -> Client<DynConnector, DynMiddleware<DynConnector>> {
-//     let smithy_client = Builder::new()
-//         // Use the default HTTPS connector
-//         .dyn_https_connector(Default::default())
-//         // Use a no-op middleware
-//         .middleware_fn(|request| request)
-//         // Build a type-erased Smithy client
-//         .build_dyn();
-
-
-//     let e = SharedEndpointResolver::new("http://localhost:13734/");
-//     let config = geth_agent_client::Config::builder()
-//         .endpoint_resolver(e)
-//         // .api_key(AuthApiKey::from("1234567890"))
-//         .build();
-
-//     let c = geth_agent_client::Client::with_config(smithy_client, config);
-//     c
-// }
 
 
 pub const DEFAULT_ADDRESS: &str = "127.0.0.1";

@@ -15,14 +15,14 @@ codegen:
 	cp -av $(SERVER_SDK_SRC)/* $(SERVER_SDK_DST)/
 	cp -av $(CLIENT_SDK_SRC)/* $(CLIENT_SDK_DST)/
 
-build: codegen
+build: codegen clippy
 	cargo build
 
 run: codegen
 	cargo run
 
 clippy: codegen
-	cargo clippy
+	cargo clippy --fix
 
 test: codegen
 	cargo test

@@ -46,7 +46,7 @@ structure CoreUtilization {
     name: String
 
     @required
-    usage: Long
+    usage: Float
 
     @required
     frequency: Float

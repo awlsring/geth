@@ -156,7 +156,6 @@ impl Network {
             let mut skip = true;
             for prefix in INTERFACE_ACCEPT_PREFIXES.iter() {
                 if interface.name.starts_with(prefix) {
-                    println!("wont skip interface: {}", interface.name);
                     skip = false;
                 }
             }

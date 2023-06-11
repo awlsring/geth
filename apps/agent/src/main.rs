@@ -21,7 +21,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
     tokio::spawn(agent_loop(ctl));
 
     println!("Starting server loop!");
-    // tokio::spawn(server_loop(sctl));
     server_loop(sctl).await;
 
     Ok(())

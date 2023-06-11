@@ -28,7 +28,7 @@ pub fn cpu_to_summary(cpu: &CPU) -> CpuSummary {
     let mut utils = Vec::new();
     for core in cpu.cores() {
         let name = core.name().to_string();
-        let usage = *core.usage() as i64;
+        let usage = *core.usage() as f32;
         let frequency =  *core.frequency()as f32;
         let util = CoreUtilization {
             name: name,

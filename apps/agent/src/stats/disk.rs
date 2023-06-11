@@ -69,17 +69,6 @@ impl Disk {
         self.total_space = disk.total_space();
     }
 
-    pub fn to_json(&self) -> String {
-        format!("{{\"name\":\"{}\",\"mount_point\":\"{}\",\"available_space\":{},\"total_space\":{},\"file_system\":\"{}\",\"is_removable\":{},\"disk_type\":\"{:?}\"}}",
-            self.name,
-            self.mount_point,
-            self.available_space,
-            self.total_space,
-            self.file_system,
-            self.is_removable,
-            self.disk_type,
-        )
-    }
 }
 
 
