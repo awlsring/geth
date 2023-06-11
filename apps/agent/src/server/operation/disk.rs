@@ -4,7 +4,7 @@ use aws_smithy_http_server::Extension;
 use geth_agent_server::{output::GetDiskOutput, output::ListDisksOutput, model::{DiskSummary, DiskType}, input::GetDiskInput, input::ListDisksInput, error};
 use sysinfo::DiskKind;
 
-use crate::{server::server::State, stats::disk::Disk};
+use crate::{server::http::State, stats::disk::Disk};
 
 
 pub async fn get_disk(input: GetDiskInput, state: Extension<Arc<State>>) -> Result<GetDiskOutput, error::GetDiskError> {

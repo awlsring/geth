@@ -3,7 +3,7 @@ use std::sync::Arc;
 use aws_smithy_http_server::Extension;
 use geth_agent_server::{output::GetSwapOutput, model::SwapSummary, input::GetSwapInput, error};
 
-use crate::{server::server::State, stats::memory::Swap};
+use crate::{server::http::State, stats::memory::Swap};
 
 
 pub async fn get_swap(_input: GetSwapInput, state: Extension<Arc<State>>) -> Result<GetSwapOutput, error::GetSwapError> {

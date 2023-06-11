@@ -3,7 +3,7 @@ use std::sync::Arc;
 use aws_smithy_http_server::Extension;
 use geth_agent_server::{output::GetMemoryOutput, model::MemorySummary, input::GetMemoryInput, error};
 
-use crate::{server::server::State, stats::memory::Memory};
+use crate::{server::http::State, stats::memory::Memory};
 
 
 pub async fn get_memory(_input: GetMemoryInput, state: Extension<Arc<State>>) -> Result<GetMemoryOutput, error::GetMemoryError> {

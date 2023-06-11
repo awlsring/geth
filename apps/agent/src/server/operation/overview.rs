@@ -3,7 +3,7 @@ use std::sync::Arc;
 use aws_smithy_http_server::Extension;
 use geth_agent_server::{output::GetOverviewOutput, model::OverviewSummary, input::GetOverviewInput, error};
 
-use crate::server::server::State;
+use crate::server::http::State;
 
 use super::{system::system_to_summary, swap::swap_to_summary, disk::disks_to_summaries, memory::memory_to_summary, cpu::cpu_to_summary, network::network_interfaces_to_summaries};
 

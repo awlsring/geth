@@ -3,7 +3,7 @@ use std::sync::Arc;
 use aws_smithy_http_server::Extension;
 use geth_agent_server::{input::GetSystemInput, output::GetSystemOutput, model::SystemSummary, error};
 
-use crate::{server::server::State, stats::system::System};
+use crate::{server::http::State, stats::system::System};
 
 
 pub async fn get_system(_input: GetSystemInput, state: Extension<Arc<State>>) -> Result<GetSystemOutput, error::GetSystemError> {

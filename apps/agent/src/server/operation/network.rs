@@ -3,7 +3,7 @@ use std::{sync::Arc, net::IpAddr};
 use aws_smithy_http_server::Extension;
 use geth_agent_server::{output::{GetNetworkInterfaceOutput, ListNetworkInterfacesOutput}, model::{NetworkInterfaceSummary, AddressSummary, AddressVersion, NetworkInterfaceTrafficSummary}, input::{GetNetworkInterfaceInput, ListNetworkInterfacesInput}, error};
 
-use crate::{server::server::State, stats::network::{NetworkInterface, AddressKind}};
+use crate::{server::http::State, stats::network::{NetworkInterface, AddressKind}};
 
 
 pub async fn get_network_interface(input: GetNetworkInterfaceInput, state: Extension<Arc<State>>) -> Result<GetNetworkInterfaceOutput, error::GetNetworkInterfaceError> {

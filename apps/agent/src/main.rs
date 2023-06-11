@@ -8,7 +8,7 @@ mod stats;
 use stats::controller::SystemController;
 
 mod server;
-use server::server::start_server;
+use server::http::start_server;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
