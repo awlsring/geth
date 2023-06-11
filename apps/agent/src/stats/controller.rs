@@ -1,7 +1,7 @@
 use sysinfo::SystemExt;
 use sysinfo::System as Sys;
 
-use super::cpu::CPU;
+use super::cpu::Cpu;
 use super::disk::Storage;
 use super::memory::{Memory, Swap};
 use super::network::Network;
@@ -12,7 +12,7 @@ pub struct SystemController {
     system: System,
     memory: Memory,
     swap: Swap,
-    cpu: CPU,
+    cpu: Cpu,
     network: Network,
     storage: Storage,
 }
@@ -25,7 +25,7 @@ impl SystemController {
         let system = System::new(&sys);
         let memory = Memory::new(&sys);
         let swap = Swap::new(&sys);
-        let cpu = CPU::new(&sys);
+        let cpu = Cpu::new(&sys);
         let network = Network::new(&sys);
         let storage = Storage::new(&sys);
 
@@ -46,7 +46,7 @@ impl SystemController {
         &self.system
     }
 
-    pub fn cpu(&self) -> &CPU {
+    pub fn cpu(&self) -> &Cpu {
         &self.cpu
     }
 

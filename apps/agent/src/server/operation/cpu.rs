@@ -3,7 +3,7 @@ use std::sync::Arc;
 use aws_smithy_http_server::Extension;
 use geth_agent_server::{output::GetCpuOutput, model::CpuSummary, model::CoreUtilization, input::GetCpuInput, error};
 
-use crate::{server::server::State, stats::cpu::CPU};
+use crate::{server::server::State, stats::cpu::Cpu};
 
 
 pub async fn get_cpu(_input: GetCpuInput, state: Extension<Arc<State>>) -> Result<GetCpuOutput, error::GetCpuError> {
@@ -19,7 +19,7 @@ pub async fn get_cpu(_input: GetCpuInput, state: Extension<Arc<State>>) -> Resul
     Ok(output)
 }
 
-pub fn cpu_to_summary(cpu: &CPU) -> CpuSummary {
+pub fn cpu_to_summary(cpu: &Cpu) -> CpuSummary {
     let cores = cpu.core_count();
     let architecture = cpu.architecture();
     let model = cpu.brand();

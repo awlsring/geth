@@ -23,7 +23,7 @@ impl Core {
     }
 }
 
-pub struct CPU {
+pub struct Cpu {
     cores: HashMap<String, Core>,
     core_count: usize,
     architecture: String,
@@ -31,8 +31,8 @@ pub struct CPU {
     brand: String,
 }
 
-impl CPU {
-    pub fn new(system: &System) -> CPU {
+impl Cpu {
+    pub fn new(system: &System) -> Cpu {
         let arch = String::from(ARCH);
         
         
@@ -55,7 +55,7 @@ impl CPU {
 
         let core_count = util::handle_optional_usize(system.physical_core_count());
 
-        CPU {
+        Cpu {
             core_count,
             cores,
             architecture: arch,
