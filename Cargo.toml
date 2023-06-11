@@ -1,0 +1,6 @@
+[workspace]
+members = [
+	"./apps/agent",
+	"./package/geth-agent-client",
+	"./package/geth-agent-server",
+]

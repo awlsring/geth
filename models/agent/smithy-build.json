@@ -1,0 +1,87 @@
+{
+    "version": "2.0",
+    "projections": {
+        "proj": {
+            "plugins": {
+                "openapi": {
+                    "service": "awlsring.geth.agent#GethAgent",
+                    "protocol": "aws.protocols#restJson1"
+                },
+                "go-codegen": {
+                    "service": "awlsring.geth.agent#GethAgent",
+                    "module": "github.com/awlsring/geth-agent",
+                    "generateGoMod": true,
+                    "moduleVersion": "0.0.1"  
+                },
+                "rust-client-codegen": {
+                    "runtimeConfig": {
+                        "relativePath": "/Users/awlsring/Code/smithy/smithy-rs/rust-runtime"
+                    },
+                    "service": "awlsring.geth.agent#GethAgent",  
+                    "codegen": {
+                        "includeFluentClient": true
+                    },
+                    "module": "geth-agent-client",
+                    "moduleDescription": "Geth Agent Client",
+                    "moduleVersion": "0.1.0",
+                    "moduleAuthors": ["awlsring@gmail.com"]
+                },
+                "rust-server-codegen": {
+                    "runtimeConfig": {
+                        "relativePath": "/Users/awlsring/Code/smithy/smithy-rs/rust-runtime"
+                    },
+                    "service": "awlsring.geth.agent#GethAgent",  
+                    "module": "geth-agent-server",
+                    "moduleDescription": "Geth Agent Server",
+                    "moduleVersion": "0.1.0",
+                    "moduleAuthors": ["awlsring@gmail.com"]
+                }
+            }
+        },
+        "pegged": {
+            "plugins": {
+                "openapi": {
+                    "service": "awlsring.geth.agent#GethAgent",
+                    "protocol": "aws.protocols#restJson1"
+                },
+                "go-codegen": {
+                    "service": "awlsring.geth.agent#GethAgent",
+                    "module": "github.com/awlsring/geth-agent",
+                    "generateGoMod": true,
+                    "moduleVersion": "0.0.1"  
+                },
+                "rust-client-codegen": {
+                    "runtimeConfig": {
+                        "relativePath": "/Users/awlsring/Code/smithy/smithy-rs/rust-runtime",
+                        "versions": {
+                            "DEFAULT": "0.55.3",
+                            "aws-smithy-client": "0.55.3"
+                        }
+                    },
+                    "service": "awlsring.geth.agent#GethAgent",  
+                    "codegen": {
+                        "includeFluentClient": true
+                    },
+                    "module": "geth-agent-client",
+                    "moduleDescription": "Geth Agent Client",
+                    "moduleVersion": "0.1.0",
+                    "moduleAuthors": ["awlsring@gmail.com"]
+                },
+                "rust-server-codegen": {
+                    "runtimeConfig": {
+                        "relativePath": "/Users/awlsring/Code/smithy/smithy-rs/rust-runtime",
+                        "versions": {
+                            "DEFAULT": "0.55.3",
+                            "aws-smithy-client": "0.55.3"
+                        }
+                    },
+                    "service": "awlsring.geth.agent#GethAgent",  
+                    "module": "geth-agent-server",
+                    "moduleDescription": "Geth Agent Server",
+                    "moduleVersion": "0.1.0",
+                    "moduleAuthors": ["awlsring@gmail.com"]
+                }
+            }
+        }
+    }
+}

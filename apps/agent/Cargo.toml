@@ -1,0 +1,23 @@
+[package]
+name = "geth-agent"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+prost = "0.11"
+tokio = { version = "1.28.2", features = ["full"] }
+sysinfo = "0.29.2"
+network-interface = "1.0.1"
+serde = { version = "1.0.164", features = ["derive"] }
+tower = "0.4.13"
+clap = { version = "4.3.3", features = ["derive"] }
+hyper = { version = "0.14.26", features = ["server"] }
+
+# Local paths
+geth-agent-client = { path = "../../package/geth-agent-client" }
+geth-agent-server = { path = "../../package/geth-agent-server" }
+aws-smithy-http-server = { path = "/Users/awlsring/Code/smithy/smithy-rs/rust-runtime/aws-smithy-http-server/", features = ["request-id"] }
+aws-smithy-runtime = { path = "/Users/awlsring/Code/smithy/smithy-rs/rust-runtime/aws-smithy-runtime/" }
+aws-smithy-client = { path = "/Users/awlsring/Code/smithy/smithy-rs/rust-runtime/aws-smithy-client/", features = ["rustls"] }
+aws-smithy-http = { path = "/Users/awlsring/Code/smithy/smithy-rs/rust-runtime/aws-smithy-http/" }
+aws-smithy-types = { path = "/Users/awlsring/Code/smithy/smithy-rs/rust-runtime/aws-smithy-types/" }
