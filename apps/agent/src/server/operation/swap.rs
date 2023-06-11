@@ -10,7 +10,7 @@ pub async fn get_swap(_input: GetSwapInput, state: Extension<Arc<State>>) -> Res
     let ctl = state.controller.lock().await;
     let swap = ctl.swap();
 
-    let sum = swap_to_summary(&swap);
+    let sum = swap_to_summary(swap);
 
     let output = GetSwapOutput {
         summary: sum

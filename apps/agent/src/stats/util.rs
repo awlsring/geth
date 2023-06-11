@@ -21,8 +21,5 @@ pub fn u8_as_string(u: &[u8]) -> String {
 }
 
 pub fn handle_optional_usize(optional: Option<usize>) -> usize {
-    match optional {
-        Some(s) => s,
-        None => 0
-    }
+    optional.unwrap_or(0)
 }

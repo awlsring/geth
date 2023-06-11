@@ -10,7 +10,7 @@ pub async fn get_memory(_input: GetMemoryInput, state: Extension<Arc<State>>) ->
     let ctl = state.controller.lock().await;
     let mem = ctl.memory();
 
-    let sum = memory_to_summary(&mem);
+    let sum = memory_to_summary(mem);
 
     let output = GetMemoryOutput {
         summary: sum

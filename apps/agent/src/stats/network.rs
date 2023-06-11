@@ -30,7 +30,7 @@ impl Address {
         let version = match addr {
             Addr::V4(_addr) => AddressKind::V4,
             Addr::V6(addr) => {
-                if Address::is_local_ipv6(&addr) {
+                if Address::is_local_ipv6(addr) {
                     AddressKind::V6Local
                 } else {
                     AddressKind::V6
@@ -38,7 +38,7 @@ impl Address {
             }
         };
         Address {
-            version: version,
+            version,
             address: addr.ip(),
             broadcast: addr.broadcast(),
             netmask: addr.netmask(),
@@ -101,8 +101,8 @@ impl NetworkInterface {
         
         NetworkInterface {
             name: String::from(name),
-            addresses: addresses,
-            mac: mac,
+            addresses,
+            mac,
             bytes: NetworkInterfaceTraffic {
                 transmitted: 0,
                 recieved: 0
@@ -163,7 +163,7 @@ impl Network {
                 continue;
             }
 
-            if interface.addr.len() == 0 {
+            if interface.addr.is_empty() {
                 continue;
             }
 

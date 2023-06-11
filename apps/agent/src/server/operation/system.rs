@@ -10,7 +10,7 @@ pub async fn get_system(_input: GetSystemInput, state: Extension<Arc<State>>) ->
     let ctl = state.controller.lock().await;
     let sys = ctl.system();
 
-    let sum = system_to_summary(&sys);
+    let sum = system_to_summary(sys);
 
     let output = GetSystemOutput {
         summary: sum
@@ -32,10 +32,10 @@ pub fn system_to_summary(system: &System) -> SystemSummary {
     SystemSummary {
         family: fam_opt,
         kernel_version: kernel,
-        os: os,
-        os_version: os_version,
-        os_pretty: os_pretty,
-        hostname: hostname,
+        os,
+        os_version,
+        os_pretty,
+        hostname,
         boot_time: boot_time as i64,
         up_time: up_time as i64,
     }

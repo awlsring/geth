@@ -15,11 +15,11 @@ pub async fn get_disk(input: GetDiskInput, state: Extension<Arc<State>>) -> Resu
 
     match disk {
         Some(d) => {
-            let sum = disk_to_summary(&d);
+            let sum = disk_to_summary(d);
             let output = GetDiskOutput { summary: sum };
-            return Ok(output);
+            Ok(output)
         }
-        None => return Err(error::GetDiskError::ResourceNotFoundException(error::ResourceNotFoundException { message: format!("Disk {} not found", input.name()) }))
+        None => Err(error::GetDiskError::ResourceNotFoundException(error::ResourceNotFoundException { message: format!("Disk {} not found", input.name()) }))
     }
 }
 
@@ -34,7 +34,7 @@ pub async fn list_disks(_input: ListDisksInput, state: Extension<Arc<State>>) ->
 pub fn disks_to_summaries(disks: Vec<&Disk>) -> Vec<DiskSummary> {
     let mut summaries = Vec::new();
     for disk in disks {
-        let sum = disk_to_summary(&disk);
+        let sum = disk_to_summary(disk);
         summaries.push(sum);
     }
 
@@ -56,12 +56,12 @@ pub fn disk_to_summary(disk: &Disk) -> DiskSummary {
     let kind = DiskType::from_str(t);
 
     DiskSummary {
-        name: name,
-        mount_point: mount_point,
-        file_system: file_system,
+        name,
+        mount_point,
+        file_system,
         total_space: total,
         available_space: available,
-        removeable: removeable,
+        removeable,
         r#type: kind.unwrap(),
     }
 }

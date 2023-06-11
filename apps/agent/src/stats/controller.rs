@@ -29,17 +29,17 @@ impl SystemController {
         let network = Network::new(&sys);
         let storage = Storage::new(&sys);
 
-        let ctl = SystemController {
-            _sys: sys,
-            system: system,
-            memory: memory,
-            swap: swap,
-            cpu: cpu,
-            network: network,
-            storage: storage,
-        };
+        
 
-        ctl
+        SystemController {
+            _sys: sys,
+            system,
+            memory,
+            swap,
+            cpu,
+            network,
+            storage,
+        }
     }
 
     pub fn system(&self) -> &System {

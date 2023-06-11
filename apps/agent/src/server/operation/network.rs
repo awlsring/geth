@@ -14,11 +14,11 @@ pub async fn get_network_interface(input: GetNetworkInterfaceInput, state: Exten
 
     match net {
         Some(n) => {
-            let sum = network_interface_to_summary(&n);
+            let sum = network_interface_to_summary(n);
             let output = GetNetworkInterfaceOutput { summary: sum };
-            return Ok(output);
+            Ok(output)
         }
-        None => return Err(error::GetNetworkInterfaceError::ResourceNotFoundException(error::ResourceNotFoundException { message: format!("Network Interface {} not found", input.name()) }))
+        None => Err(error::GetNetworkInterfaceError::ResourceNotFoundException(error::ResourceNotFoundException { message: format!("Network Interface {} not found", input.name()) }))
     }
 }
 
@@ -34,7 +34,7 @@ pub async fn list_network_interfaces(_input: ListNetworkInterfacesInput, state: 
 pub fn network_interfaces_to_summaries(nics: Vec<&NetworkInterface>) -> Vec<NetworkInterfaceSummary> {
     let mut summaries = Vec::new();
     for nic in nics {
-        let sum = network_interface_to_summary(&nic);
+        let sum = network_interface_to_summary(nic);
         summaries.push(sum);
     }
 
@@ -55,17 +55,17 @@ pub fn network_interface_to_summary(iface: &NetworkInterface) -> NetworkInterfac
 
         let addr = AddressSummary {
             version: address_kind_to_smithy(version),
-            address: address,
-            netmask: netmask,
-            broadcast: broadcast,
+            address,
+            netmask,
+            broadcast,
         };
 
         addresses.push(addr);
     }
     
     NetworkInterfaceSummary { 
-        name: name,
-        addresses: addresses,
+        name,
+        addresses,
         mac_address: mac,
         bytes_traffic: NetworkInterfaceTrafficSummary {
             transmitted: *iface.bytes().transmitted() as i64,
@@ -87,8 +87,5 @@ fn address_kind_to_smithy(kind: &AddressKind) -> AddressVersion {
 }
 
 fn handle_optional_ip(ip: &Option<IpAddr>) -> Option<String> {
-    match ip {
-        Some(ip) => Some(ip.to_string()),
-        None => None,
-    }
+    ip.as_ref().map(|ip| ip.to_string())
 }

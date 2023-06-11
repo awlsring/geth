@@ -10,7 +10,7 @@ pub async fn get_cpu(_input: GetCpuInput, state: Extension<Arc<State>>) -> Resul
     let ctl = state.controller.lock().await;
     let cpu = ctl.cpu();
 
-    let sum = cpu_to_summary(&cpu);
+    let sum = cpu_to_summary(cpu);
 
     let output = GetCpuOutput {
         summary: sum
@@ -28,12 +28,12 @@ pub fn cpu_to_summary(cpu: &CPU) -> CpuSummary {
     let mut utils = Vec::new();
     for core in cpu.cores() {
         let name = core.name().to_string();
-        let usage = *core.usage() as f32;
+        let usage = *core.usage();
         let frequency =  *core.frequency()as f32;
         let util = CoreUtilization {
-            name: name,
-            usage: usage,
-            frequency: frequency,
+            name,
+            usage,
+            frequency,
         };
 
         utils.push(util);

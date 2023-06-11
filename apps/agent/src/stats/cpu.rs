@@ -34,13 +34,13 @@ pub struct CPU {
 impl CPU {
     pub fn new(system: &System) -> CPU {
         let arch = String::from(ARCH);
-        let vendor;
-        let brand;
+        
+        
 
         let cpu = &system.cpus()[0];
 
-        vendor = cpu.vendor_id().to_string();
-        brand = cpu.brand().to_string();
+        let vendor = cpu.vendor_id().to_string();
+        let brand = cpu.brand().to_string();
 
         let mut cores = HashMap::new();
 
@@ -56,11 +56,11 @@ impl CPU {
         let core_count = util::handle_optional_usize(system.physical_core_count());
 
         CPU {
-            core_count: core_count,
+            core_count,
             cores,
             architecture: arch,
-            vendor: vendor,
-            brand: brand,
+            vendor,
+            brand,
         }
     }
 
