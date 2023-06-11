@@ -98,7 +98,7 @@ impl Storage {
     pub fn disks(&self) -> Vec<&Disk> {
         let mut disks = Vec::new();
 
-        for (_, d) in &self.disks {
+        for d in self.disks.values() {
             disks.push(d);
         }
 

@@ -188,7 +188,7 @@ impl Network {
     pub fn network_interfaces(&self) -> Vec<&NetworkInterface> {
         let mut nics = Vec::new();
 
-        for (_, nic) in &self.interfaces {
+        for nic in self.interfaces.values() {
             nics.push(nic);
         }
 
@@ -200,11 +200,8 @@ impl Network {
 
             let iface = self.interfaces.get_mut(name);
 
-            if iface.is_none() {
-                continue;
-            } else {
-                let u = iface.unwrap();
-                u.update(iface_data)
+            if let Some(iface) = iface {
+                iface.update(iface_data);
             }
         }
     }

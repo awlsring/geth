@@ -78,7 +78,7 @@ impl CPU {
     pub fn cores(&self) -> Vec<&Core> {
         let mut cores = Vec::new();
 
-        for (_, core) in &self.cores {
+        for core in self.cores.values() {
             cores.push(core);
         }
 
