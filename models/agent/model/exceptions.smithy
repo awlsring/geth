@@ -16,6 +16,13 @@ structure ResourceNotFoundException {
     message: String
 }
 
+@error("client")
+@httpError(401)
+structure UnauthorizedException {
+    @required
+    message: String
+}
+
 @error("server")
 @httpError(500)
 structure InternalServerException {

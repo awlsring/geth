@@ -21,3 +21,7 @@ aws-smithy-runtime = { path = "/Users/awlsring/Code/smithy/smithy-rs/rust-runtim
 aws-smithy-client = { path = "/Users/awlsring/Code/smithy/smithy-rs/rust-runtime/aws-smithy-client/", features = ["rustls"] }
 aws-smithy-http = { path = "/Users/awlsring/Code/smithy/smithy-rs/rust-runtime/aws-smithy-http/" }
 aws-smithy-types = { path = "/Users/awlsring/Code/smithy/smithy-rs/rust-runtime/aws-smithy-types/" }
+pin-project-lite = "0.2.9"
+futures-util = "0.3.28"
+http = "0.2.9"
+http-body = "0.4.5"

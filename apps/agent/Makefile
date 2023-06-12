@@ -22,7 +22,7 @@ run: codegen
 	cargo run
 
 clippy: codegen
-	cargo clippy --fix
+	cargo clippy
 
 test: codegen
 	cargo test

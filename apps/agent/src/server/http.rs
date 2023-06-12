@@ -10,9 +10,12 @@ use aws_smithy_http_server::{
 
 use clap::Parser;
 use tokio::sync::Mutex;
+
 use crate::stats::controller::SystemController;
 
-use super::plugin::PrintExt;
+use super::{plugin::PrintExt, auth::{controller::AuthController}};
+
+use super::auth::plugin::AuthExtension;
 
 use hyper::{StatusCode};
 
@@ -45,6 +48,9 @@ struct Args {
     port: u16,
 }
 
+#[derive(Clone)]
+struct Config;
+
 pub struct State {
     pub controller: Arc<Mutex<SystemController>>,
 }
@@ -64,8 +70,12 @@ pub async fn check_health(_input: input::HealthInput) -> Result<output::HealthOu
 pub async fn start_server(ctl: Arc<Mutex<SystemController>>) {
     let args = Args::parse();
 
+    // TODO: Add config where keys can be stored and retrived
+    let auth_controller = AuthController::new();
+
     let plugins = PluginPipeline::new()
         .print()
+        .auth(auth_controller.into(), Config)
         .insert_operation_extension()
         .instrument()
         .http_layer(AlbHealthCheckLayer::from_handler("/ping", |_req| async {

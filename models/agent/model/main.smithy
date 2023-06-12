@@ -26,4 +26,5 @@ service GethAgent {
         Cpu,
     ],
     operations: [ Health ],
+    errors: [ UnauthorizedException ]
 }
