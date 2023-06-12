@@ -29,8 +29,6 @@ impl SystemController {
         let network = Network::new(&sys);
         let storage = Storage::new(&sys);
 
-        
-
         SystemController {
             _sys: sys,
             system,

@@ -34,7 +34,7 @@ use super::operation::cpu::get_cpu;
 
 
 
-pub const DEFAULT_ADDRESS: &str = "127.0.0.1";
+pub const DEFAULT_ADDRESS: &str = "0.0.0.0";
 pub const DEFAULT_PORT: u16 = 13734;
 
 #[derive(Parser, Debug)]
