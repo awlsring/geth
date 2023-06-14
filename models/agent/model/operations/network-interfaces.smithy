@@ -21,7 +21,6 @@ structure NetworkInterfaceSummary {
     @required
     macAddress: String
 
-    // maybe make util stuff a seprate call to do lazy refreshes
     @required
     bytesTraffic: NetworkInterfaceTrafficSummary
 

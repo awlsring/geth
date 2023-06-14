@@ -38,7 +38,10 @@ structure OverviewSummary {
     cpu: CpuSummary
 
     @required
-    disk: DiskSummaries
+    disks: DiskSummaries
+
+    @required
+    volumes: VolumeSummaries
 
     @required
     network: NetworkInterfaceSummaries

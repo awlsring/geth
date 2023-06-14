@@ -21,6 +21,7 @@ pub enum DiskInterface {
 #[derive(Debug)]
 /// Represents a physical disk
 pub struct Disk {
+    device: String,
     /// The model of the disk
     model: String,
     /// The vendor of the disk
@@ -40,6 +41,11 @@ pub struct Disk {
 }
 
 impl Disk {
+    /// Returns the device name of the disk
+    pub fn get_device(&self) -> &String {
+        &self.device
+    }
+
     /// Returns the model of the disk
     pub fn get_model(&self) -> &String {
         &self.model
@@ -119,7 +125,7 @@ fn is_device(dir: &fs::DirEntry) -> bool {
 }
 
 fn form_disk(dir: &fs::DirEntry) -> Disk {
-
+    let device = get_device(dir);
     let model = get_model(dir);
     let vendor = get_vendor(dir);
     let serial = get_serial(dir);
@@ -130,6 +136,7 @@ fn form_disk(dir: &fs::DirEntry) -> Disk {
     let kind = determine_kind(dir);
 
     Disk {
+        device,
         model,
         vendor,
         serial,
@@ -138,6 +145,15 @@ fn form_disk(dir: &fs::DirEntry) -> Disk {
         size_raw,
         size_actual,
         kind,
+    }
+}
+
+fn get_device(dir: &fs::DirEntry) -> String {
+    let file_name = dir.file_name();
+    let file_name = file_name.to_str();
+    match file_name {
+        Some(file_name) => file_name.to_string(),
+        None => String::from(""),
     }
 }
 

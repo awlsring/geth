@@ -13,25 +13,31 @@ string DiskName
 
 structure DiskSummary {
     @required
-    name: String
+    device: String
 
     @required
-    mountPoint: String
+    model: String
 
     @required
-    availableSpace: Long
+    vendor: String
 
     @required
-    totalSpace: Long
+    interface: DiskInterface
 
     @required
-    fileSystem: String
-
-    @required
-    removeable: Boolean
+    serial: String
 
     @required
     type: DiskType
+
+    @required
+    sectorSize: Integer
+
+    @required
+    sizeRaw: Long
+
+    @required
+    sizeActual: Long
 }
 
 list DiskSummaries {
@@ -40,8 +46,15 @@ list DiskSummaries {
 
 enum DiskType {
     HDD = "HDD",
-    SDD = "SSD",
+    SSD = "SSD",
     NVME = "NVME",
+    UNKNOWN = "Unknown",
+}
+
+enum DiskInterface {
+    SATA = "SATA",
+    SCSI = "SCSI",
+    UNKNOWN = "Unknown",
 }
 
 @readonly

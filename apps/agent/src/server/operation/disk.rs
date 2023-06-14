@@ -1,37 +1,35 @@
 use std::{sync::Arc, str::FromStr};
 
 use aws_smithy_http_server::Extension;
-use geth_agent_server::{output::GetDiskOutput, output::ListDisksOutput, model::{DiskSummary, DiskType}, input::GetDiskInput, input::ListDisksInput, error};
-use sysinfo::DiskKind;
+use geth_agent_server::{output::GetDiskOutput, output::ListDisksOutput, model::{DiskSummary, DiskType, DiskInterface as SmithyDiskInterface}, input::GetDiskInput, input::ListDisksInput, error};
+use hw_info::{Disk, DiskInterface, DiskKind};
 
-use crate::{server::http::State, stats::disk::Disk};
+use crate::server::http::State;
 
 
 pub async fn get_disk(input: GetDiskInput, state: Extension<Arc<State>>) -> Result<GetDiskOutput, error::GetDiskError> {
     let ctl = state.controller.lock().await;
-    let disks = ctl.storage();
+    let disks = ctl.disks();
 
-    let disk = disks.get_disk(input.name());
-
-    match disk {
-        Some(d) => {
-            let sum = disk_to_summary(d);
+    for disk in disks {
+        if disk.get_device() == input.name() {
+            let sum = disk_to_summary(disk);
             let output = GetDiskOutput { summary: sum };
-            Ok(output)
+            return Ok(output)
         }
-        None => Err(error::GetDiskError::ResourceNotFoundException(error::ResourceNotFoundException { message: format!("Disk {} not found", input.name()) }))
     }
+    Err(error::GetDiskError::ResourceNotFoundException(error::ResourceNotFoundException { message: format!("Disk {} not found", input.name()) }))
 }
 
 pub async fn list_disks(_input: ListDisksInput, state: Extension<Arc<State>>) -> Result<ListDisksOutput, error::ListDisksError> {
     let ctl = state.controller.lock().await;
-    let disks = ctl.storage();
-    let sums = disks_to_summaries(disks.disks());
+    let disks = ctl.disks();
+    let sums = disks_to_summaries(disks);
     let output = ListDisksOutput { summaries: sums };
     Ok(output)
 }
 
-pub fn disks_to_summaries(disks: Vec<&Disk>) -> Vec<DiskSummary> {
+pub fn disks_to_summaries(disks: &Vec<Disk>) -> Vec<DiskSummary> {
     let mut summaries = Vec::new();
     for disk in disks {
         let sum = disk_to_summary(disk);
@@ -42,26 +40,36 @@ pub fn disks_to_summaries(disks: Vec<&Disk>) -> Vec<DiskSummary> {
 }
 
 pub fn disk_to_summary(disk: &Disk) -> DiskSummary {
-    let name = disk.name().to_owned();
-    let mount_point = disk.mount_point().to_owned();
-    let file_system = disk.file_system().to_owned();
-    let total = *disk.total_space() as i64;
-    let available = *disk.available_space() as i64;
-    let removeable = *disk.is_removable();
-    let t = match disk.disk_type() {
-        DiskKind::HDD => "HDD",
-        DiskKind::SSD => "SSD",
-        DiskKind::Unknown(_) => "HDD",
+    let device = disk.get_device().to_owned();
+    let model = disk.get_model().to_owned();
+    let serial = disk.get_serial().to_owned();
+    let vendor = disk.get_vendor().to_owned();
+    let interface = disk.get_interface().to_owned();
+    let i = match disk.get_interface() {
+        DiskInterface::SATA => SmithyDiskInterface::Sata,
+        DiskInterface::SCSI => SmithyDiskInterface::Scsi,
+        _ => SmithyDiskInterface::Unknown,
     };
-    let kind = DiskType::from_str(t);
+    let kind = disk.get_kind().to_owned();
+    let t = match disk.get_kind() {
+        DiskKind::HDD => DiskType::Hdd,
+        DiskKind::SSD => DiskType::Ssd,
+        DiskKind::NVME => DiskType::Nvme,
+        DiskKind::Unknown(_) => todo!(),
+    };
+    let sector_size = *disk.get_sector_size() as i32;
+    let size_raw = *disk.get_size_raw() as i64;
+    let size = disk.get_size_actual();
 
     DiskSummary {
-        name,
-        mount_point,
-        file_system,
-        total_space: total,
-        available_space: available,
-        removeable,
-        r#type: kind.unwrap(),
+        device,
+        model,
+        serial,
+        vendor,
+        interface: i,
+        r#type: t,
+        sector_size,
+        size_raw,
+        size_actual: *size,
     }
 }

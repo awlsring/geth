@@ -1,4 +1,5 @@
 use sysinfo::SystemExt;
+use hw_info::{Disk, load_disks};
 use sysinfo::System as Sys;
 
 use super::cpu::Cpu;
@@ -15,6 +16,7 @@ pub struct SystemController {
     cpu: Cpu,
     network: Network,
     storage: Storage,
+    disks: Vec<Disk>
 }
 
 impl SystemController {
@@ -28,6 +30,7 @@ impl SystemController {
         let cpu = Cpu::new(&sys);
         let network = Network::new(&sys);
         let storage = Storage::new(&sys);
+        let disks: Vec<Disk> = load_disks();
 
         SystemController {
             _sys: sys,
@@ -37,6 +40,7 @@ impl SystemController {
             cpu,
             network,
             storage,
+            disks
         }
     }
 
@@ -62,6 +66,10 @@ impl SystemController {
 
     pub fn storage(&self) -> &Storage {
         &self.storage
+    }
+
+    pub fn disks(&self) -> &Vec<Disk> {
+        &self.disks
     }
 
     pub async fn refresh(&mut self) {

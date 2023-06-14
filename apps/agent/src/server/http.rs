@@ -11,7 +11,7 @@ use aws_smithy_http_server::{
 use log::{info, error};
 use tokio::sync::Mutex;
 
-use crate::{stats::controller::SystemController, config::ServerConfig};
+use crate::{stats::controller::SystemController, config::ServerConfig, server::operation::disk::{get_disk, list_disks}};
 
 use super::{plugin::PrintExt, auth::{controller::AuthController}};
 
@@ -24,8 +24,8 @@ use super::operation::overview::get_overview;
 use super::operation::system::get_system;
 use super::operation::memory::get_memory;
 use super::operation::swap::get_swap;
-use super::operation::disk::get_disk;
-use super::operation::disk::list_disks;
+use super::operation::volume::get_volume;
+use super::operation::volume::list_volumes;
 use super::operation::network::get_network_interface;
 use super::operation::network::list_network_interfaces;
 use super::operation::cpu::get_cpu;
@@ -70,6 +70,8 @@ pub async fn start_server(ctl: Arc<Mutex<SystemController>>, config: ServerConfi
         .get_cpu(get_cpu)
         .get_disk(get_disk)
         .list_disks(list_disks)
+        .get_volume(get_volume)
+        .list_volumes(list_volumes)
         .get_network_interface(get_network_interface)
         .list_network_interfaces(list_network_interfaces)
         .build()

@@ -23,6 +23,7 @@ service GethAgent {
         Memory,
         Swap,
         Disk,
+        Volume,
         Cpu,
     ],
     operations: [ Health ],

@@ -73,32 +73,32 @@ impl Disk {
 
 
 pub struct Storage {
-    disks: HashMap::<String, Disk>,
+    volumes: HashMap::<String, Disk>,
 }
 
 impl Storage {
     pub fn new(system: &System) -> Storage {
-        let mut disks = HashMap::<String, Disk>::new();
+        let mut volumes = HashMap::<String, Disk>::new();
 
         for d in system.disks() {
-            let disk = Disk::new(d);
-            disks.insert(disk.name().clone(), disk);
+            let volume = Disk::new(d);
+            volumes.insert(volume.name().clone(), volume);
         }
 
         Storage {
-            disks,
+            volumes,
         }
     }
 
-    pub fn get_disk(&self, name: &str) -> Option<&Disk> {
-        self.disks.get(name)
+    pub fn get_volume(&self, name: &str) -> Option<&Disk> {
+        self.volumes.get(name)
     }
         
 
-    pub fn disks(&self) -> Vec<&Disk> {
+    pub fn volumes(&self) -> Vec<&Disk> {
         let mut disks = Vec::new();
 
-        for d in self.disks.values() {
+        for d in self.volumes.values() {
             disks.push(d);
         }
 
@@ -107,7 +107,7 @@ impl Storage {
 
     pub fn update(&mut self, system: &System) {
         for d in system.disks() {
-            let disk = self.disks.get_mut(d.name().to_str().unwrap()).unwrap();
+            let disk = self.volumes.get_mut(d.name().to_str().unwrap()).unwrap();
             disk.update(d);
         }
     }
