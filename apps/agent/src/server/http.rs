@@ -3,7 +3,7 @@ use std::{net::SocketAddr, sync::Arc};
 use aws_smithy_http_server::{
     extension::OperationExtensionExt,
     instrumentation::InstrumentExt,
-    plugin::{alb_health_check::AlbHealthCheckLayer, PluginPipeline},
+    plugin::{alb_health_check::AlbHealthCheckLayer, PluginPipeline, IdentityPlugin},
     request::request_id::ServerRequestIdProviderLayer,
     AddExtensionLayer,
 };
@@ -78,11 +78,11 @@ pub async fn start_server(ctl: Arc<Mutex<SystemController>>) {
         .auth(auth_controller.into(), Config)
         .insert_operation_extension()
         .instrument()
-        .http_layer(AlbHealthCheckLayer::from_handler("/ping", |_req| async {
+        .layer(AlbHealthCheckLayer::from_handler("/ping", |_req| async {
             StatusCode::OK
         }));
 
-    let app = GethAgent::builder_with_plugins(plugins)
+    let app = GethAgent::builder_with_plugins(plugins, IdentityPlugin)
         .health(check_health)
         .get_overview(get_overview)
         .get_system(get_system)

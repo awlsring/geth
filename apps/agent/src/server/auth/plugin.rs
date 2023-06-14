@@ -8,13 +8,11 @@
 use std::sync::Arc;
 
 use aws_smithy_http_server::{
-    operation::{Operation, OperationShape},
+    operation::{OperationShape},
     plugin::{Plugin, PluginPipeline, PluginStack},
 };
-use tower::{layer::util::Stack};
 
-
-use super::{layer::AuthLayer, controller::AuthController};
+use super::{controller::AuthController, service::AuthService};
 
 #[derive(Clone, Debug)]
 pub struct AuthPlugin<Config> {
@@ -28,17 +26,15 @@ impl <Config> AuthPlugin<Config> {
     }
 }
 
-impl <Protocol, Op, Service, Layer, Config> Plugin<Protocol, Op, Service, Layer> for AuthPlugin<Config>
+impl <Protocol, Op, Svc, Config> Plugin<Protocol, Op, Svc> for AuthPlugin<Config>
 where
 Op: OperationShape,
     Config: Clone,
 {
-    type Service = Service;
-    type Layer = Stack<Layer, AuthLayer<Protocol, Op, Config>>;
+    type Service = AuthService<Protocol, Op, Svc, Config>;
 
-    fn map(&self, input: Operation<Service, Layer>) -> Operation<Self::Service, Self::Layer> {
-        let auth_layer = AuthLayer::new(Op::NAME.name(), self.controller.clone(), self.config.clone());
-        input.layer(auth_layer)
+    fn apply(&self, inner: Svc) -> Self::Service {
+        AuthService::new(inner, Op::ID.name(), self.controller.clone(), self.config.clone())
     }
 }
 

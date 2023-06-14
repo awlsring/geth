@@ -6,7 +6,7 @@
 //! Provides an example [`Plugin`] implementation - [`PrintPlugin`].
 
 use aws_smithy_http_server::{
-    operation::{Operation, OperationShape},
+    operation::{OperationShape},
     plugin::{Plugin, PluginPipeline, PluginStack},
     shape_id::ShapeId,
 };
@@ -59,15 +59,14 @@ impl<S> Layer<S> for PrintLayer {
 #[derive(Debug)]
 pub struct PrintPlugin;
 
-impl<P, Op, S, L> Plugin<P, Op, S, L> for PrintPlugin
+impl<P, Op, S> Plugin<P, Op, S> for PrintPlugin
 where
     Op: OperationShape,
 {
-    type Service = S;
-    type Layer = Stack<L, PrintLayer>;
+    type Service = PrintService<S>;
 
-    fn map(&self, input: Operation<S, L>) -> Operation<Self::Service, Self::Layer> {
-        input.layer(PrintLayer { id: Op::NAME })
+    fn apply(&self, inner: S) -> Self::Service {
+        PrintService { inner, id: Op::ID }
     }
 }
 

@@ -137,7 +137,7 @@ fn get_name(dir: &fs::DirEntry) -> String {
 fn get_vendor_code(dir: &fs::DirEntry) -> String {
     let vendor_code = fs::read_to_string(dir.path().join("device").join("vendor"));
     match vendor_code {
-        Ok(vendor_code) => vendor_code,
+        Ok(vendor_code) => vendor_code.trim().to_owned(),
         Err(_) => "".to_string(),
     }
 }
@@ -145,7 +145,7 @@ fn get_vendor_code(dir: &fs::DirEntry) -> String {
 fn get_mac_address(dir: &fs::DirEntry) -> String {
     let mac_address = fs::read_to_string(dir.path().join("address"));
     match mac_address {
-        Ok(mac_address) => mac_address,
+        Ok(mac_address) => mac_address.trim().to_owned(),
         Err(_) => "".to_string(),
     }
 }

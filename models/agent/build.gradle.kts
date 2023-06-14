@@ -31,6 +31,5 @@ dependencies {
     implementation("software.amazon.smithy.rust.codegen:codegen-client:0.1.0")
     implementation("software.amazon.smithy.rust.codegen.server.smithy:codegen-server:0.1.0")
     implementation("software.amazon.smithy.rust.codegen:codegen-core:0.1.0")
-    implementation("software.amazon.smithy.go:smithy-go-codegen:0.1.0")
     implementation("software.amazon.smithy:smithy-aws-traits:$smithyVersion")
 }
