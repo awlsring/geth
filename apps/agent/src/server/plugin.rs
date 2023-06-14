@@ -10,7 +10,7 @@ use aws_smithy_http_server::{
     plugin::{Plugin, PluginPipeline, PluginStack},
     shape_id::ShapeId,
 };
-use tower::{layer::util::Stack, Layer, Service};
+use tower::{Layer, Service};
 
 use std::task::{Context, Poll};
 

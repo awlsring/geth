@@ -12,18 +12,6 @@ pub struct AuthLayer<Protocol, Operation, Config> {
     _operation: PhantomData<Operation>,
 }
 
-impl<Protocol, Operation, Config> AuthLayer<Protocol, Operation, Config> {
-    pub fn new(operation: &'static str, auth: Arc<AuthController>, config: Config) -> AuthLayer<Protocol, Operation, Config> {
-        AuthLayer {
-            controller: auth,
-            operation,
-            config,
-            _protocol: PhantomData,
-            _operation: PhantomData,
-        }
-    }
-}
-
 impl <Service, Protocol, Operation, Config> Layer<Service> for AuthLayer<Protocol, Operation, Config>
 where
     Config: Clone,

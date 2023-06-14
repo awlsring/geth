@@ -1,32 +1,42 @@
+use config::{AgentConfig, ServerConfig};
 use tokio::sync::Mutex;
 use tokio::time::{sleep, Duration};
+use std::env;
 use std::sync::Arc;
 use std::{error::Error};
 
+mod config;
 mod stats;
+mod server;
 
 use stats::controller::SystemController;
-
-mod server;
 use server::http::start_server;
+use log::{info};
+use env_logger;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    println!("Started!");
+    if env::var("RUST_LOG").is_err() {
+        env::set_var("RUST_LOG", "info");
+    }
+    env_logger::init();
+    info!("Initializing agent");
 
+    let config = config::load_config();
+    
     let ctl = Arc::new(Mutex::new(SystemController::new()));
     let sctl = ctl.clone();
 
-    println!("Starting agent loop!");
-    tokio::spawn(agent_loop(ctl));
+    info!("Starting agent loop");
+    tokio::spawn(agent_loop(ctl, config.get_agent().clone()));
 
-    println!("Starting server loop!");
-    server_loop(sctl).await;
+    info!("Starting server loop");
+    server_loop(sctl, config.get_server().clone()).await;
 
     Ok(())
 }
 
-async fn agent_loop(ctl: Arc<Mutex<SystemController>>) {
+async fn agent_loop(ctl: Arc<Mutex<SystemController>>, config: AgentConfig) {
     loop {
         let mut lo = ctl.lock().await;
 
@@ -34,10 +44,10 @@ async fn agent_loop(ctl: Arc<Mutex<SystemController>>) {
 
         drop(lo);
 
-        sleep(Duration::from_millis(5000)).await;
+        sleep(Duration::from_millis(config.get_interval())).await;
     }
 }
 
-async fn server_loop(ctl: Arc<Mutex<SystemController>>) {
-    start_server(ctl).await;
+async fn server_loop(ctl: Arc<Mutex<SystemController>>, config: ServerConfig) {
+    start_server(ctl, config).await;
 }

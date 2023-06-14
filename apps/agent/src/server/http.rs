@@ -3,21 +3,19 @@ use std::{net::SocketAddr, sync::Arc};
 use aws_smithy_http_server::{
     extension::OperationExtensionExt,
     instrumentation::InstrumentExt,
-    plugin::{alb_health_check::AlbHealthCheckLayer, PluginPipeline, IdentityPlugin},
+    plugin::{PluginPipeline, IdentityPlugin},
     request::request_id::ServerRequestIdProviderLayer,
     AddExtensionLayer,
 };
 
-use clap::Parser;
+use log::{info, error};
 use tokio::sync::Mutex;
 
-use crate::stats::controller::SystemController;
+use crate::{stats::controller::SystemController, config::ServerConfig};
 
 use super::{plugin::PrintExt, auth::{controller::AuthController}};
 
 use super::auth::plugin::AuthExtension;
-
-use hyper::{StatusCode};
 
 use geth_agent_server::{GethAgent};
 use geth_agent_server::{input, output, error};
@@ -32,21 +30,7 @@ use super::operation::network::get_network_interface;
 use super::operation::network::list_network_interfaces;
 use super::operation::cpu::get_cpu;
 
-
-
 pub const DEFAULT_ADDRESS: &str = "0.0.0.0";
-pub const DEFAULT_PORT: u16 = 13734;
-
-#[derive(Parser, Debug)]
-#[clap(author, version, about, long_about = None)]
-struct Args {
-    /// Hyper server bind address.
-    #[clap(short, long, action, default_value = DEFAULT_ADDRESS)]
-    address: String,
-    /// Hyper server bind port.
-    #[clap(short, long, action, default_value_t = DEFAULT_PORT)]
-    port: u16,
-}
 
 #[derive(Clone)]
 struct Config;
@@ -67,9 +51,7 @@ pub async fn check_health(_input: input::HealthInput) -> Result<output::HealthOu
     Ok(output::HealthOutput { success: true })
 }
 
-pub async fn start_server(ctl: Arc<Mutex<SystemController>>) {
-    let args = Args::parse();
-
+pub async fn start_server(ctl: Arc<Mutex<SystemController>>, config: ServerConfig) {
     // TODO: Add config where keys can be stored and retrived
     let auth_controller = AuthController::new();
 
@@ -77,10 +59,7 @@ pub async fn start_server(ctl: Arc<Mutex<SystemController>>) {
         .print()
         .auth(auth_controller.into(), Config)
         .insert_operation_extension()
-        .instrument()
-        .layer(AlbHealthCheckLayer::from_handler("/ping", |_req| async {
-            StatusCode::OK
-        }));
+        .instrument();
 
     let app = GethAgent::builder_with_plugins(plugins, IdentityPlugin)
         .health(check_health)
@@ -104,13 +83,14 @@ pub async fn start_server(ctl: Arc<Mutex<SystemController>>) {
 
     let make_app = app.into_make_service_with_connect_info::<SocketAddr>();
 
-    let bind: SocketAddr = format!("{}:{}", args.address, args.port)
+    info!("Starting server on: {}:{}", DEFAULT_ADDRESS, config.get_server_port());
+    let bind: SocketAddr = format!("{}:{}", DEFAULT_ADDRESS, config.get_server_port())
         .parse()
         .expect("unable to parse the server bind address and port");
     let server = hyper::Server::bind(&bind).serve(make_app);
 
     // Run forever-ish...
     if let Err(err) = server.await {
-        eprintln!("server error: {}", err);
+        error!("server error: {}", err);
     }
 }
