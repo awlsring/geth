@@ -8,5 +8,5 @@ sudo chown -R gethd:gethd /etc/gethd/
 
 mkdir -p /opt/gethd
 sudo chown -R gethd:gethd /opt/gethd
-sudo chmod 750 /opt/gethd
+sudo chmod 755 /opt/gethd
 cp $SRC_DIR/apps/agent/resources/gethd.service /etc/systemd/system/gethd.service

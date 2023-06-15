@@ -13,7 +13,7 @@ mod server;
 
 use stats::controller::SystemController;
 use server::http::start_server;
-use log::{info, error};
+use log::{info, debug, error};
 use env_logger;
 
 fn main() -> Result<(), Box<dyn Error>>  {
@@ -35,8 +35,11 @@ fn main() -> Result<(), Box<dyn Error>>  {
         .privileged_action(|| "Executed before drop privileges");
 
     match daemonize.start() {
-        Ok(_) => info!("Daemonized"),
-        Err(e) => error!("Error, {}", e),
+        Ok(_) => debug!("Daemonized"),
+        Err(e) => {
+            error!("Error, {}", e);
+            std::process::exit(1)
+        },
     }
 
     tokio_main(config)
