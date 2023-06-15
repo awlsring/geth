@@ -3,6 +3,8 @@ Description=Geth system agent
 After=network.target
 
 [Service]
+Environment=RUST_LOG=info
+Environment=CONFIG_PATH=/opt/gethd/config.toml
 ExecStart=/opt/gethd/gethd
 WorkingDirectory=/opt/gethd
 User=gethd
