@@ -1,0 +1,13 @@
+[Unit]
+Description=Geth system agent
+After=network.target
+
+[Service]
+ExecStart=/opt/gethd/gethd
+WorkingDirectory=/opt/gethd
+User=gethd
+Group=gethd
+Restart=always
+
+[Install]
+WantedBy=default.target

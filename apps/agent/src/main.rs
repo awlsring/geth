@@ -1,6 +1,8 @@
-use config::{AgentConfig, ServerConfig};
+use config::{AgentConfig, ServerConfig, Config};
+use daemonize::Daemonize;
 use tokio::sync::Mutex;
 use tokio::time::{sleep, Duration};
+use std::fs::File;
 use std::env;
 use std::sync::Arc;
 use std::{error::Error};
@@ -11,18 +13,38 @@ mod server;
 
 use stats::controller::SystemController;
 use server::http::start_server;
-use log::{info};
+use log::{info, error};
 use env_logger;
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
+fn main() -> Result<(), Box<dyn Error>>  {
     if env::var("RUST_LOG").is_err() {
         env::set_var("RUST_LOG", "info");
     }
     env_logger::init();
-    info!("Initializing agent");
 
     let config = config::load_config();
+
+    let log = File::create("/opt/gethd/gethd.log").unwrap();
+
+    let daemonize = Daemonize::new()
+        .working_directory("/opt/gethd")
+        .user("gethd")
+        .group("gethd")
+        .umask(0o027)
+        .stderr(log) // all goes to err
+        .privileged_action(|| "Executed before drop privileges");
+
+    match daemonize.start() {
+        Ok(_) => info!("Daemonized"),
+        Err(e) => error!("Error, {}", e),
+    }
+
+    tokio_main(config)
+}
+
+#[tokio::main]
+async fn tokio_main(config: Config) -> Result<(), Box<dyn Error>> {
+    info!("Initializing agent");
     
     let ctl = Arc::new(Mutex::new(SystemController::new()));
     let sctl = ctl.clone();

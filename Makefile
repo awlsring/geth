@@ -7,3 +7,6 @@ agent:
 
 agent-build:
 	cd apps/agent && make build
+
+agent-install:
+	cd apps/agent && make install

@@ -4,4 +4,4 @@ log_level = "debug"
 port = 7032
 
 [agent]
-interval = 10
+interval = 10000

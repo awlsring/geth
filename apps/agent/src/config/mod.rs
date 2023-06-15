@@ -13,7 +13,7 @@ impl Default for Config {
     fn default() -> Self {
         Config {
             agent: AgentConfig {
-                interval: 10,
+                interval: 10000,
                 cpu: None,
                 mem: None,
                 disk: None,

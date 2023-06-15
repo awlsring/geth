@@ -10,6 +10,7 @@ use aws_smithy_http_server::{
     plugin::{Plugin, PluginPipeline, PluginStack},
     shape_id::ShapeId,
 };
+use log::info;
 use tower::{Layer, Service};
 
 use std::task::{Context, Poll};
@@ -34,7 +35,7 @@ where
     }
 
     fn call(&mut self, req: R) -> Self::Future {
-        println!("Operation Invoked: {}", self.id.absolute());
+        info!("Operation Invoked: {}", self.id.absolute());
         self.inner.call(req)
     }
 }

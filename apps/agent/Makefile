@@ -18,6 +18,10 @@ codegen:
 build: codegen clippy
 	cargo build
 
+install: build
+	${SRC_DIR}/apps/agent/scripts/install.sh
+	${SRC_DIR}/apps/agent/scripts/reset.sh
+
 run: codegen
 	cargo run
 
