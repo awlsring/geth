@@ -13,11 +13,11 @@ pub struct NetworkInterface {
     /// The MAC address of the interface
     mac_address: String,
     /// The speed of the interface
-    speed: i16,
+    speed: u16,
     /// The duplex of the interface
     duplex: String,
     /// The MTU of the interface
-    mtu: i16,
+    mtu: u16,
     /// The broadcast of the interface
     broadcast: String,
     /// Whether the interface is active
@@ -45,7 +45,7 @@ impl NetworkInterface {
         &self.mac_address
     }
 
-    pub fn speed(&self) -> &i16 {
+    pub fn speed(&self) -> &u16 {
         &self.speed
     }
 
@@ -53,7 +53,7 @@ impl NetworkInterface {
         &self.duplex
     }
 
-    pub fn mtu(&self) -> &i16 {
+    pub fn mtu(&self) -> &u16 {
         &self.mtu
     }
 
@@ -150,10 +150,10 @@ fn get_mac_address(dir: &fs::DirEntry) -> String {
     }
 }
 
-fn get_speed(dir: &fs::DirEntry) -> i16 {
+fn get_speed(dir: &fs::DirEntry) -> u16 {
     let speed = fs::read_to_string(dir.path().join("speed"));
     match speed {
-        Ok(speed) => speed.trim().parse::<i16>().unwrap(),
+        Ok(speed) => speed.trim().parse::<u16>().unwrap(),
         Err(_) => 0,
     }
 }
@@ -204,10 +204,10 @@ fn get_subsystem_id(dir: &fs::DirEntry) -> String {
     subsystem_id
 }
 
-fn get_mtu(dir: &fs::DirEntry) -> i16 {
+fn get_mtu(dir: &fs::DirEntry) -> u16 {
     let mtu = fs::read_to_string(dir.path().join("mtu"));
     match mtu {
-        Ok(mtu) => mtu.trim().parse::<i16>().unwrap(),
+        Ok(mtu) => mtu.trim().parse::<u16>().unwrap(),
         Err(_) => 0,
     }
 }

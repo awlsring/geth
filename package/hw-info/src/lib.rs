@@ -5,6 +5,9 @@ pub use linux::disk::DiskKind;
 pub use linux::disk::DiskInterface;
 pub use linux::disk::load_disks;
 
+pub use linux::nic::NetworkInterface;
+pub use linux::nic::load_nics;
+
 pub fn add(left: usize, right: usize) -> usize {
     left + right
 }

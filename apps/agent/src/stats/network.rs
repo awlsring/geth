@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 use std::net::IpAddr;
 
+use log::info;
+use hw_info::load_nics;
 use sysinfo::{System, SystemExt, NetworkData, NetworkExt};
 
 use network_interface::Addr;
@@ -8,9 +10,9 @@ use network_interface::NetworkInterface as NetIface;
 use network_interface::NetworkInterfaceConfig;
 use network_interface::V6IfAddr;
 
-use super::util::handle_optional_string;
+use hw_info::NetworkInterface as PhysNetworkInterface;
 
-static INTERFACE_ACCEPT_PREFIXES: [&str; 2] = ["eth", "en"];
+use super::util::handle_optional_string;
 
 pub enum AddressKind {
     V4,
@@ -84,25 +86,51 @@ impl NetworkInterfaceTraffic {
 pub struct NetworkInterface {
     name: String,
     addresses: Vec<Address>,
-    mac: String,
     bytes: NetworkInterfaceTraffic,
-    packets: NetworkInterfaceTraffic
+    packets: NetworkInterfaceTraffic,
+    r#virtual: bool,
+    mac: Option<String>,
+    vendor: Option<String>,
+    mtu: Option<u16>,
+    duplex: Option<String>,
+    speed: Option<u16>,
 }
 
 impl NetworkInterface {
-    pub fn new(iface: &NetIface) -> NetworkInterface {
+    pub fn new(iface: &NetIface, phys: Option<&&PhysNetworkInterface>) -> NetworkInterface {
         let name = &iface.name;
-        let mac = handle_optional_string(iface.mac_addr.to_owned());
+        let mac = iface.mac_addr.to_owned();
 
         let mut addresses = Vec::new();
         for addr in &iface.addr {
             addresses.push(Address::new(addr));
         }
+
+        let r#virtual = phys.is_none();
+
+        let vendor: Option<String> = match phys {
+            Some(phys) => Some(phys.vendor().to_owned()),
+            None => None,
+        };
+
+        let mtu: Option<u16> = match phys {
+            Some(phys) => Some(phys.mtu().to_owned()),
+            None => None,
+        };
+
+        let duplex: Option<String> = match phys {
+            Some(phys) => Some(phys.duplex().to_owned()),
+            None => None,
+        };
+
+        let speed: Option<u16> = match phys {
+            Some(phys) => Some(phys.speed().to_owned()),
+            None => None,
+        };
         
         NetworkInterface {
             name: String::from(name),
             addresses,
-            mac,
             bytes: NetworkInterfaceTraffic {
                 transmitted: 0,
                 recieved: 0
@@ -110,7 +138,13 @@ impl NetworkInterface {
             packets: NetworkInterfaceTraffic {
                 transmitted: 0,
                 recieved: 0
-            }
+            },
+            mac,
+            vendor,
+            mtu,
+            duplex,
+            speed,
+            r#virtual: r#virtual,
         }
     }
 
@@ -122,7 +156,7 @@ impl NetworkInterface {
         &self.name
     }
 
-    pub fn mac(&self) -> &String {
+    pub fn mac(&self) -> &Option<String> {
         &self.mac
     }
 
@@ -132,6 +166,26 @@ impl NetworkInterface {
 
     pub fn packets(&self) -> &NetworkInterfaceTraffic {
         &self.packets
+    }
+
+    pub fn vendor(&self) -> &Option<String> {
+        &self.vendor
+    }
+
+    pub fn mtu(&self) -> &Option<u16> {
+        &self.mtu
+    }
+
+    pub fn duplex(&self) -> &Option<String> {
+        &self.duplex
+    }
+
+    pub fn speed(&self) -> &Option<u16> {
+        &self.speed
+    }
+
+    pub fn is_virtual(&self) -> &bool {
+        &self.r#virtual
     }
 
     pub fn update(&mut self, data: &NetworkData) {
@@ -150,26 +204,20 @@ pub struct Network {
 impl Network {
     pub fn new(system: &System) -> Network {
         let mut interfaces = HashMap::new();
-        let network_interfaces = NetIface::show().unwrap();
+        let mut phys_interfaces = HashMap::new();
+        let network_interfaces = NetIface::show().unwrap_or_default();
+
+        let binding = load_nics();
+        for nic in binding.iter() {
+            phys_interfaces.insert(nic.name().clone(), nic);
+        }
         
         for interface in network_interfaces.iter() {
-            let mut skip = true;
-            for prefix in INTERFACE_ACCEPT_PREFIXES.iter() {
-                if interface.name.starts_with(prefix) {
-                    skip = false;
-                }
-            }
-            if skip {
-                continue;
-            }
-
-            if interface.addr.is_empty() {
-                continue;
-            }
-
             let name = &interface.name;
+            let phys = phys_interfaces.get(name);
 
-            let network_interface = NetworkInterface::new(interface);
+            let network_interface = NetworkInterface::new(interface, phys);
+
             interfaces.insert(String::from(name), network_interface);
         }        
 

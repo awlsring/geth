@@ -5,3 +5,4 @@ Cargo.lock
 **/.gradle
 package/geth-agent-client
 package/geth-agent-server
+.smithy*

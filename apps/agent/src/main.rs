@@ -24,22 +24,26 @@ fn main() -> Result<(), Box<dyn Error>>  {
 
     let config = config::load_config();
 
-    let log = File::create("/opt/gethd/gethd.log").unwrap();
+    let env = env::var("RUNTIME_ENV").unwrap_or("dev".to_string());
 
-    let daemonize = Daemonize::new()
-        .working_directory("/opt/gethd")
-        .user("gethd")
-        .group("gethd")
-        .umask(0o027)
-        .stderr(log) // all goes to err
-        .privileged_action(|| "Executed before drop privileges");
-
-    match daemonize.start() {
-        Ok(_) => debug!("Daemonized"),
-        Err(e) => {
-            error!("Error, {}", e);
-            std::process::exit(1)
-        },
+    if env != "dev" {
+        let log = File::create("/opt/gethd/gethd.log").unwrap();
+    
+        let daemonize = Daemonize::new()
+            .working_directory("/opt/gethd")
+            .user("gethd")
+            .group("gethd")
+            .umask(0o027)
+            .stderr(log) // all goes to err
+            .privileged_action(|| "Executed before drop privileges");
+    
+        match daemonize.start() {
+            Ok(_) => debug!("Daemonized"),
+            Err(e) => {
+                error!("Error, {}", e);
+                std::process::exit(1)
+            },
+        }
     }
 
     tokio_main(config)

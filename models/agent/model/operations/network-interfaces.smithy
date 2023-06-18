@@ -19,13 +19,23 @@ structure NetworkInterfaceSummary {
     addresses: AddressSummaries
 
     @required
-    macAddress: String
-
-    @required
     bytesTraffic: NetworkInterfaceTrafficSummary
 
     @required
     packetTraffic: NetworkInterfaceTrafficSummary
+
+    @required
+    virtual: Boolean
+
+    macAddress: String
+
+    vendor: String
+
+    mtu: Integer
+
+    duplex: String
+
+    speed: Integer
 }
 
 list NetworkInterfaceSummaries {

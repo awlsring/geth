@@ -44,7 +44,6 @@ pub fn network_interfaces_to_summaries(nics: Vec<&NetworkInterface>) -> Vec<Netw
 pub fn network_interface_to_summary(iface: &NetworkInterface) -> NetworkInterfaceSummary {
 
     let name = iface.name().to_string();
-    let mac = iface.mac().to_string();
 
     let mut addresses = Vec::new();
     for addr in iface.addresses() {
@@ -62,11 +61,20 @@ pub fn network_interface_to_summary(iface: &NetworkInterface) -> NetworkInterfac
 
         addresses.push(addr);
     }
+
+    let mtu: Option<i32> = match iface.mtu() {
+        Some(mtu) => Some(*mtu as i32),
+        None => None,
+    };
+
+    let speed = match iface.speed() {
+        Some(speed) => Some(*speed as i32),
+        None => None,
+    };
     
     NetworkInterfaceSummary { 
         name,
         addresses,
-        mac_address: mac,
         bytes_traffic: NetworkInterfaceTrafficSummary {
             transmitted: *iface.bytes().transmitted() as i64,
             recieved: *iface.bytes().recieved() as i64,
@@ -75,6 +83,12 @@ pub fn network_interface_to_summary(iface: &NetworkInterface) -> NetworkInterfac
             transmitted: *iface.packets().transmitted() as i64,
             recieved: *iface.packets().recieved() as i64,
         },
+        r#virtual: *iface.is_virtual(),
+        mac_address: iface.mac().to_owned(),
+        vendor: iface.vendor().to_owned(),
+        mtu: mtu,
+        duplex: iface.duplex().to_owned(),
+        speed: speed,
     }
 }
 
