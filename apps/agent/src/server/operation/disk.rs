@@ -48,6 +48,7 @@ pub fn disk_to_summary(disk: &Disk) -> DiskSummary {
     let i = match disk.get_interface() {
         DiskInterface::SATA => SmithyDiskInterface::Sata,
         DiskInterface::SCSI => SmithyDiskInterface::Scsi,
+        DiskInterface::PCI_E => SmithyDiskInterface::PciE,
         _ => SmithyDiskInterface::Unknown,
     };
     let kind = disk.get_kind().to_owned();

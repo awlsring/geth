@@ -54,6 +54,7 @@ enum DiskType {
 enum DiskInterface {
     SATA = "SATA",
     SCSI = "SCSI",
+    PCI_E = "PCIe",
     UNKNOWN = "Unknown",
 }
 

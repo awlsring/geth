@@ -15,6 +15,7 @@ pub enum DiskKind {
 pub enum DiskInterface {
     SATA,
     SCSI,
+    PCI_E,
     Unknown(String),
 }
 
@@ -171,7 +172,7 @@ fn get_vendor(dir: &fs::DirEntry) -> String {
     let vendor_file = fs::read_to_string(vendor_file);
     match vendor_file {
         Ok(vendor) => vendor.trim().to_string(),
-        Err(_) => String::from(""),
+        Err(_) => String::from("Unknown"),
     }
 }
 
@@ -203,6 +204,9 @@ fn get_serial(dir: &fs::DirEntry) -> String {
 }
 
 fn get_interface(dir: &fs::DirEntry) -> DiskInterface {
+    if dir.file_name().to_str().unwrap_or_else(|| "").contains("nvme") {
+        return DiskInterface::PCI_E;
+    }
     let interface_file = dir.path().join("device").join("type");
     let interface_file = fs::read_to_string(interface_file);
     match interface_file {
