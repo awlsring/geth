@@ -9,6 +9,9 @@ resource System {
 
 structure SystemSummary {
     @required
+    machineId: String
+    
+    @required
     family: String
 
     @required

@@ -1,9 +1,12 @@
+use std::io::Read;
+
 use sysinfo::SystemExt;
 use sysinfo::System as Sys;
 
 use super::util::handle_optional_string;
 
 pub struct System {
+    machine_id: String,
     family: String,
     kernel_version: String,
     os_pretty: String,
@@ -12,6 +15,16 @@ pub struct System {
     hostname: String,
     boot_time: u64,
     up_time: u64,
+}
+
+fn get_machine_id() -> String {
+    let mut machine_id = String::new();
+    if let Ok(mut file) = std::fs::File::open("/etc/machine-id") {
+        if let Ok(_) = file.read_to_string(&mut machine_id) {
+            machine_id = machine_id.trim().to_string();
+        }
+    }
+    machine_id
 }
 
 impl System {
@@ -26,6 +39,7 @@ impl System {
         let up_time = system.uptime();
 
         System {
+            machine_id: get_machine_id(),
             family,
             kernel_version,
             os_pretty,
@@ -35,6 +49,10 @@ impl System {
             boot_time,
             up_time,
         }
+    }
+
+    pub fn machine_id(&self) -> &String {
+        &self.machine_id
     }
 
     pub fn family(&self) -> &String {
@@ -72,6 +90,4 @@ impl System {
     pub fn update_up_time(&mut self, system: &Sys) {
         self.up_time = system.uptime();
     }
-
-
 }

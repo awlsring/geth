@@ -20,6 +20,7 @@ pub async fn get_system(_input: GetSystemInput, state: Extension<Arc<State>>) ->
 }
 
 pub fn system_to_summary(system: &System) -> SystemSummary {
+    let machine_id = system.machine_id().to_owned();
     let fam_opt = system.family().to_owned();
     let kernel = system.kernel_version().to_owned();
     let os = system.os().to_owned();
@@ -30,6 +31,7 @@ pub fn system_to_summary(system: &System) -> SystemSummary {
     let up_time = system.up_time().to_owned();
 
     SystemSummary {
+        machine_id,
         family: fam_opt,
         kernel_version: kernel,
         os,
