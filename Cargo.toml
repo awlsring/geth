@@ -2,6 +2,7 @@
 members = [
 	"apps/agent",
 	"package/hw-info",
+	"package/containers",
 	"package/geth-agent-client",
 	"package/geth-agent-server",
 ]
