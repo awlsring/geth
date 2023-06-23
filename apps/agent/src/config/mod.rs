@@ -21,6 +21,8 @@ impl Default for Config {
             },
             server: ServerConfig {
                 port: 7032,
+                allowed_keys: vec![String::from("toes")],
+                no_auth_operations: vec![String::from("Health")],
             },
         }
     }
@@ -38,11 +40,21 @@ impl Config {
 #[derive(Clone, Debug, Deserialize)]
 pub struct ServerConfig {
     port: u16,
+    allowed_keys: Vec<String>,
+    no_auth_operations: Vec<String>,
 }
 
 impl ServerConfig {
     pub fn get_server_port(&self) -> u16 {
         self.port
+    }
+
+    pub fn allowed_keys(&self) -> &Vec<String> {
+        &self.allowed_keys
+    }
+
+    pub fn no_auth_operations(&self) -> &Vec<String> {
+        &self.no_auth_operations
     }
 }
 

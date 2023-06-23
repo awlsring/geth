@@ -52,7 +52,7 @@ pub async fn check_health(_input: input::HealthInput) -> Result<output::HealthOu
 
 pub async fn start_server(ctl: Arc<Mutex<SystemController>>, config: ServerConfig) {
     // TODO: Add config where keys can be stored and retrived
-    let auth_controller = AuthController::new();
+    let auth_controller = AuthController::new(config.no_auth_operations(), config.allowed_keys());
 
     let plugins = PluginPipeline::new()
         .print()

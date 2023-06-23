@@ -79,13 +79,10 @@ where
             
             let auth_header = headers.get("authorization");
 
-            if let Some(auth_header) = auth_header {
-                let head = auth_header.to_str().unwrap();
-                if auth_controller.auth(op, head).await {
-                    return inner.call(req).await;
-                }
+            if auth_controller.auth(op, auth_header).await {
+                return inner.call(req).await;
             }
-
+            
             // This sucks, fix later
             Ok(IntoResponse::<Protocol>::into_response(UnauthorizedException))
         };
