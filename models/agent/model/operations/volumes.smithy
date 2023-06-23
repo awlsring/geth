@@ -22,6 +22,9 @@ structure VolumeSummary {
     availableSpace: Long
 
     @required
+    usedSpace: Long
+
+    @required
     totalSpace: Long
 
     @required

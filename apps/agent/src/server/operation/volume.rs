@@ -59,6 +59,7 @@ pub fn volume_to_summary(disk: &Disk) -> VolumeSummary {
         name,
         mount_point,
         file_system,
+        used_space: total - available,
         total_space: total,
         available_space: available,
         removeable,
