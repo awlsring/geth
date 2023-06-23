@@ -1,5 +1,6 @@
 use http::HeaderValue;
 use log::debug;
+use serde::__private::de;
 
 
 #[derive(Clone, Debug)]
@@ -24,14 +25,36 @@ impl AuthController {
         }
 
         if let Some(auth_header) = key {
-            let key = auth_header.to_str().unwrap_or("none");
-            if self.allowed_keys.contains(&key.to_string()) {
-                debug!("Key is in allowlist");
-                return true;
+            let key = extract_api_key(auth_header);
+
+            match key {
+                Some(key) => {
+                    if self.allowed_keys.contains(&key.to_string()) {
+                        debug!("Key is in allowlist");
+                        return true;
+                    }
+                },
+                None => {
+                    debug!("No key found in header");
+                },
             }
         }
 
         debug!("authorization denied");
         false
+    }
+}
+
+fn extract_api_key(header: &HeaderValue) -> Option<String> {
+    let key = header.to_str().unwrap_or("none");
+    match key {
+        "none" => None,
+        _ => {
+            let parts = key.split(" ").collect::<Vec<&str>>();
+            match parts.len() {
+                2 => Some(parts[1].to_string()),
+                _ => None,
+            }
+        },
     }
 }

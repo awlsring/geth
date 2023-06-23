@@ -76,7 +76,6 @@ where
 
         let f = async move {
             let headers = req.headers();
-            
             let auth_header = headers.get("authorization");
 
             if auth_controller.auth(op, auth_header).await {
