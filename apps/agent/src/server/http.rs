@@ -23,7 +23,6 @@ use geth_agent_server::{input, output, error};
 use super::operation::overview::get_overview;
 use super::operation::system::get_system;
 use super::operation::memory::get_memory;
-use super::operation::swap::get_swap;
 use super::operation::volume::get_volume;
 use super::operation::volume::list_volumes;
 use super::operation::network::get_network_interface;
@@ -66,7 +65,6 @@ pub async fn start_server(ctl: Arc<Mutex<SystemController>>, config: ServerConfi
         .get_overview(get_overview)
         .get_system(get_system)
         .get_memory(get_memory)
-        .get_swap(get_swap)
         .get_cpu(get_cpu)
         .get_disk(get_disk)
         .list_disks(list_disks)

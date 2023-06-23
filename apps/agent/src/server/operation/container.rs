@@ -1,14 +1,9 @@
-use std::{sync::Arc, time::Duration, env};
+use std::{sync::Arc};
 
 use async_stream::stream;
-use aws_smithy_http::{byte_stream::ByteStream, body::SdkBody, event_stream::MessageStreamError};
 use aws_smithy_http_server::Extension;
 use containers::{Container, Port, ContainerProtocol, Volume, Network};
-use geth_agent_server::{output::{StreamContainerLogsOutput, GetContainerOutput, ListContainersOutput, StreamContainerStatisticsOutput}, input::{StreamContainerLogsInput, ListContainersInput, GetContainerInput, StreamContainerStatisticsInput}, error::{self, ResourceNotFoundException}, model::{Logs, LogLine, ContainerSummary, ContainerState, ContainerPortBinding, ContainerPortProtocol, VolumeSummary, ContainerVolume, ContainerNetwork, ContainerStatistics, ContainerType}};
-use hyper::{body::Bytes, Body};
-use log::{info, debug};
-use tokio::{time::sleep, task};
-use tokio::sync::mpsc;
+use geth_agent_server::{output::{StreamContainerLogsOutput, GetContainerOutput, ListContainersOutput, StreamContainerStatisticsOutput}, input::{StreamContainerLogsInput, ListContainersInput, GetContainerInput, StreamContainerStatisticsInput}, error::{self, ResourceNotFoundException}, model::{Logs, LogLine, ContainerSummary, ContainerState, ContainerPortBinding, ContainerPortProtocol, ContainerVolume, ContainerNetwork, ContainerStatistics, ContainerType}};
 use crate::server::http::State;
 
 pub fn container_to_summary(container: &Container) -> ContainerSummary {
@@ -41,11 +36,11 @@ pub fn container_to_summary(container: &Container) -> ContainerSummary {
         None => None,
     };
     let started = match container.started() {
-        Some(s) => Some(s.timestamp() as i64),
+        Some(s) => optional_timestamp(s.timestamp()),
         None => None,
     };
     let finished = match container.finished() {
-        Some(f) => Some(f.timestamp() as i64),
+        Some(f) => optional_timestamp(f.timestamp()),
         None => None,
     };
     let statistics = match container.statistics() {
@@ -86,8 +81,14 @@ pub fn container_to_summary(container: &Container) -> ContainerSummary {
             None => None,
             Some(l) => Some(l.to_owned()),
         },
+    }
+}
 
-
+fn optional_timestamp(ts: i64) -> Option<i64> {
+    if ts < 0 {
+        None
+    } else {
+        Some(ts)
     }
 }
 

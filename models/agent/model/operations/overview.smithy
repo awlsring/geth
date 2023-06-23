@@ -32,9 +32,6 @@ structure OverviewSummary {
     memory: MemorySummary
 
     @required
-    swap: SwapSummary
-
-    @required
     cpu: CpuSummary
 
     @required

@@ -26,6 +26,13 @@ structure GetMemoryOutput {
 
 structure MemorySummary {
     @required
+    memory: MemoryTypeSummary
+    @required
+    swap: MemoryTypeSummary
+}
+
+structure MemoryTypeSummary {
+    @required
     total: Long
 
     @required

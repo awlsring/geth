@@ -7,7 +7,7 @@ use sysinfo::System as Sys;
 
 use super::cpu::Cpu;
 use super::disk::Storage;
-use super::memory::{Memory, Swap};
+use super::memory::Memory;
 use super::network::Network;
 use super::system::System;
 
@@ -16,7 +16,6 @@ pub struct SystemController {
     container_controller: Option<Containers>,
     system: System,
     memory: Memory,
-    swap: Swap,
     cpu: Cpu,
     network: Network,
     storage: Storage,
@@ -32,7 +31,6 @@ impl SystemController {
         
         let system = System::new(&sys);
         let memory = Memory::new(&sys);
-        let swap = Swap::new(&sys);
         let cpu = Cpu::new(&sys);
         let network = Network::new(&sys);
         let storage = Storage::new(&sys);
@@ -40,14 +38,13 @@ impl SystemController {
         for disk in load_disks() {
             disks.insert(disk.get_device().to_string(), disk);
         }
-        let mut containers = HashMap::<String, Container>::new();
+        let containers = HashMap::<String, Container>::new();
 
         SystemController {
             system_controller: sys,
             container_controller: container_controller,
             system,
             memory,
-            swap,
             cpu,
             network,
             storage,
@@ -68,10 +65,6 @@ impl SystemController {
         &self.memory
     }
 
-    pub fn swap(&self) -> &Swap {
-        &self.swap
-    }
-
     pub fn network(&self) -> &Network {
         &self.network
     }
@@ -89,33 +82,38 @@ impl SystemController {
     }
 
     pub async fn refresh(&mut self) {
-        self.system_controller.refresh_all();
-        self.refresh_system();
-        self.refresh_memory();
-        self.refresh_cpu();
-        self.refresh_network();
-        self.refresh_storage();
+        self.refresh_system().await;
+        self.refresh_memory().await;
+        self.refresh_cpu().await;
+        self.refresh_network().await;
+        self.refresh_storage().await;
         self.refresh_containers().await;
     }
 
-    fn refresh_system(&mut self) {
+    async fn refresh_system(&mut self) {
+        self.system_controller.refresh_system();
         self.system.update_up_time(&self.system_controller)
     }
 
-    fn refresh_memory(&mut self) {
+    async fn refresh_memory(&mut self) {
+        self.system_controller.refresh_memory();
         self.memory.update(&self.system_controller);
-        self.swap.update(&self.system_controller);
     }
 
-    fn refresh_cpu(&mut self) {
+    async fn refresh_cpu(&mut self) {
+        self.system_controller.refresh_cpu();
         self.cpu.update(&self.system_controller);
     }
 
-    fn refresh_network(&mut self) {
+    async fn refresh_network(&mut self) {
+        self.system_controller.refresh_networks_list();
+        self.system_controller.refresh_networks();
         self.network.update(&self.system_controller);
     }
 
-    fn refresh_storage(&mut self) {
+    async fn refresh_storage(&mut self) {
+        self.system_controller.refresh_disks_list();
+        self.system_controller.refresh_disks();
         self.storage.update(&self.system_controller);
     }
 

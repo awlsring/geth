@@ -22,7 +22,6 @@ service GethAgent {
         Overview
         System,
         Memory,
-        Swap,
         Disk,
         Volume,
         Cpu,
