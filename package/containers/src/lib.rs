@@ -1,10 +1,20 @@
 use bollard::{Docker, API_DEFAULT_VERSION, container::StatsOptions};
-use common::Container;
 
 use futures_util::stream::StreamExt;
 mod common;
 mod docker;
 mod containers;
+
+pub use containers::Containers;
+pub use common::Container;
+pub use common::ContainerStatistics;
+pub use common::ContainerState;
+pub use common::Port;
+pub use common::Volume;
+pub use common::ContainerLogLine;
+pub use common::ContainerProtocol;
+pub use common::Network;
+pub use common::ContainerType;
 
 
 #[cfg(test)]

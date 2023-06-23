@@ -148,7 +148,7 @@ impl Container {
         let volumes = mounts_to_volumes(container.mounts);
         let networks = networks_from_network_map(container.network_settings);
         let command = container.path.to_owned();
-        let environment: HashMap<String, String> = match container.config.clone() { // <- fix later
+        let environment: Option<HashMap<String, String>> = match container.config.clone() { // <- fix later
             Some(config) => match config.env {
                 Some(env) => {
                     let mut result: HashMap<String, String> = HashMap::new();
@@ -158,18 +158,18 @@ impl Container {
                         let value = parts.next().unwrap_or("").to_owned();
                         result.insert(key, value);
                     }
-                    result
+                    Some(result)
                 },
-                None => HashMap::new(),
+                None => None,
             },
-            None => HashMap::new(),
+            None => None,
         };
-        let labels = match container.config {
+        let labels: Option<HashMap<String, String>> = match container.config {
             Some(config) => match config.labels {
-                Some(labels) => labels,
-                None => HashMap::new(),
+                Some(labels) => Some(labels),
+                None => None,
             },
-            None => HashMap::new(),
+            None => None,
         };
 
         Container {

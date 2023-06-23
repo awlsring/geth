@@ -11,7 +11,7 @@ use aws_smithy_http_server::{
 use log::{info, error};
 use tokio::sync::Mutex;
 
-use crate::{stats::controller::SystemController, config::ServerConfig, server::operation::disk::{get_disk, list_disks}};
+use crate::{stats::controller::SystemController, config::ServerConfig, server::operation::{disk::{get_disk, list_disks}, container::{stream_container_logs, get_container, list_containers, stream_container_statistics}}};
 
 use super::{plugin::PrintExt, auth::{controller::AuthController}};
 
@@ -74,6 +74,10 @@ pub async fn start_server(ctl: Arc<Mutex<SystemController>>, config: ServerConfi
         .list_volumes(list_volumes)
         .get_network_interface(get_network_interface)
         .list_network_interfaces(list_network_interfaces)
+        .stream_container_logs(stream_container_logs)
+        .stream_container_statistics(stream_container_statistics)
+        .get_container(get_container)
+        .list_containers(list_containers)
         .build()
         .expect("failed to build an instance of GethAgent");
 

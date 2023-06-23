@@ -1,4 +1,4 @@
-use std::{sync::Arc, str::FromStr};
+use std::{sync::Arc, str::FromStr, collections::HashMap};
 
 use aws_smithy_http_server::Extension;
 use geth_agent_server::{output::GetDiskOutput, output::ListDisksOutput, model::{DiskSummary, DiskType, DiskInterface as SmithyDiskInterface}, input::GetDiskInput, input::ListDisksInput, error};
@@ -11,14 +11,16 @@ pub async fn get_disk(input: GetDiskInput, state: Extension<Arc<State>>) -> Resu
     let ctl = state.controller.lock().await;
     let disks = ctl.disks();
 
-    for disk in disks {
-        if disk.get_device() == input.name() {
-            let sum = disk_to_summary(disk);
-            let output = GetDiskOutput { summary: sum };
+    let dev = input.name();
+
+    let disk = match disks.get(dev) {
+        Some(d) => {
+            let summary = disk_to_summary(d);
+            let output = GetDiskOutput { summary };
             return Ok(output)
-        }
-    }
-    Err(error::GetDiskError::ResourceNotFoundException(error::ResourceNotFoundException { message: format!("Disk {} not found", input.name()) }))
+        },
+        None => return Err(error::GetDiskError::ResourceNotFoundException(error::ResourceNotFoundException { message: format!("Disk {} not found", input.name()) })),
+    };
 }
 
 pub async fn list_disks(_input: ListDisksInput, state: Extension<Arc<State>>) -> Result<ListDisksOutput, error::ListDisksError> {
@@ -29,9 +31,9 @@ pub async fn list_disks(_input: ListDisksInput, state: Extension<Arc<State>>) ->
     Ok(output)
 }
 
-pub fn disks_to_summaries(disks: &Vec<Disk>) -> Vec<DiskSummary> {
+pub fn disks_to_summaries(disks: &HashMap<String, Disk>) -> Vec<DiskSummary> {
     let mut summaries = Vec::new();
-    for disk in disks {
+    for (_, disk) in disks {
         let sum = disk_to_summary(disk);
         summaries.push(sum);
     }

@@ -85,13 +85,13 @@ structure GetDiskOutput {
 @readonly
 @http(method: "GET", uri: "/disk", code: 200)
 operation ListDisks {
-    input: ListDiskInput,
+    input: ListDisksInput,
     output: ListDisksOutput,
     errors: [ValidationException]
 }
 
 @input 
-structure ListDiskInput {}
+structure ListDisksInput {}
 
 @output
 structure ListDisksOutput {

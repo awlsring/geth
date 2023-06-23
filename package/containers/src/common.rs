@@ -139,15 +139,96 @@ pub struct Container {
     pub(crate) created: DateTime<Utc>,
     pub(crate) started: Option<DateTime<Utc>>,
     pub(crate) finished: Option<DateTime<Utc>>,
-    pub(crate) environment: HashMap<String, String>,
+    pub(crate) environment: Option<HashMap<String, String>>,
     pub(crate) command: Option<String>,
     pub(crate) state: ContainerState,
     pub(crate) ports: Vec<Port>,
     pub(crate) volumes: Vec<Volume>,
     pub(crate) networks: Vec<Network>,
-    pub(crate) labels: HashMap<String, String>,
+    pub(crate) labels: Option<HashMap<String, String>>,
     pub(crate) statistics: Option<ContainerStatistics>,
     pub(crate) type_: ContainerType,
+}
+
+impl Container {
+    pub fn id (&self) -> &str {
+        &self.id
+    }
+
+    pub fn name (&self) -> &str {
+        &self.name
+    }
+
+    pub fn image (&self) -> &str {
+        &self.image
+    }
+
+    pub fn created (&self) -> &DateTime<Utc> {
+        &self.created
+    }
+
+    pub fn started (&self) -> Option<&DateTime<Utc>> {
+        match &self.started {
+            Some(started) => Some(started),
+            None => None,
+        }
+    }
+
+    pub fn finished (&self) -> Option<&DateTime<Utc>> {
+        match &self.finished {
+            Some(finished) => Some(finished),
+            None => None,
+        }
+    }
+
+    pub fn environment (&self) -> Option<&HashMap<String, String>> {
+        match &self.environment {
+            Some(environment) => Some(environment),
+            None => None,
+        }
+    }
+
+    pub fn command (&self) -> Option<&str> {
+        match &self.command {
+            Some(command) => Some(command),
+            None => None,
+        }
+    }
+
+    pub fn state (&self) -> &ContainerState {
+        &self.state
+    }
+
+    pub fn ports (&self) -> &Vec<Port> {
+        &self.ports
+    }
+
+    pub fn volumes (&self) -> &Vec<Volume> {
+        &self.volumes
+    }
+
+    pub fn networks (&self) -> &Vec<Network> {
+        &self.networks
+    }
+
+    pub fn labels (&self) -> Option<&HashMap<String, String>> {
+        match &self.labels {
+            Some(labels) => Some(labels),
+            None => None,
+        }
+    }
+
+    pub fn statistics (&self) -> Option<&ContainerStatistics> {
+        match &self.statistics {
+            Some(statistics) => Some(statistics),
+            None => None,
+        }
+    }
+
+    pub fn type_ (&self) -> &ContainerType {
+        &self.type_
+    }
+
 }
 
 #[derive(Clone, Debug)]
@@ -162,8 +243,52 @@ pub struct ContainerStatistics {
     pub(crate) block_write_bytes: u64,
 }
 
+impl ContainerStatistics {
+    pub fn cpu_utilization (&self) -> f64 {
+        self.cpu_utilization
+    }
+
+    pub fn memory_utilization (&self) -> f64 {
+        self.memory_utilization
+    }
+
+    pub fn memory_usage (&self) -> u64 {
+        self.memory_usage
+    }
+
+    pub fn memory_limit (&self) -> u64 {
+        self.memory_limit
+    }
+
+    pub fn network_rx_bytes (&self) -> u64 {
+        self.network_rx_bytes
+    }
+
+    pub fn network_tx_bytes (&self) -> u64 {
+        self.network_tx_bytes
+    }
+
+    pub fn block_read_bytes (&self) -> u64 {
+        self.block_read_bytes
+    }
+
+    pub fn block_write_bytes (&self) -> u64 {
+        self.block_write_bytes
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct ContainerLogLine {
     pub(crate) timestamp: DateTime<Utc>,
     pub(crate) line: String,
+}
+
+impl ContainerLogLine {
+    pub fn timestamp (&self) -> &DateTime<Utc> {
+        &self.timestamp
+    }
+
+    pub fn line (&self) -> &str {
+        &self.line
+    }
 }

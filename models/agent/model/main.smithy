@@ -17,6 +17,7 @@ use aws.protocols#restJson1
 service GethAgent {
     version: "2023-06-07",
     resources: [
+        Container,
         NetworkInterface,
         Overview
         System,

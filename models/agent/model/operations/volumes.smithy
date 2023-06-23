@@ -70,13 +70,13 @@ structure GetVolumeOutput {
 @readonly
 @http(method: "GET", uri: "/volume", code: 200)
 operation ListVolumes {
-    input: ListVolumeInput,
+    input: ListVolumesInput,
     output: ListVolumesOutput,
     errors: [ValidationException]
 }
 
 @input 
-structure ListVolumeInput {}
+structure ListVolumesInput {}
 
 @output
 structure ListVolumesOutput {
