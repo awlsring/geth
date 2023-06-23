@@ -13,9 +13,9 @@ use tokio::sync::Mutex;
 
 use crate::{stats::controller::SystemController, config::ServerConfig, server::operation::{disk::{get_disk, list_disks}, container::{stream_container_logs, get_container, list_containers, stream_container_statistics}}};
 
-use super::{plugin::PrintExt, auth::{controller::AuthController}};
-
-use super::auth::plugin::AuthExtension;
+use smithy_common::auth::controller::AuthController;
+use smithy_common::auth::plugin::AuthExtension;
+use smithy_common::print::plugin::PrintExt;
 
 use geth_agent_server::{GethAgent};
 use geth_agent_server::{input, output, error};

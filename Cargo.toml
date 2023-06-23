@@ -4,6 +4,7 @@ members = [
 	"apps/control",
 	"package/hw-info",
 	"package/containers",
+	"package/smithy-common",
 	"package/geth-agent-client",
 	"package/geth-agent-server",
 ]

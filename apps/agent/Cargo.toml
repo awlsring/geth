@@ -14,6 +14,7 @@ clap = { version = "4.3.3", features = ["derive"] }
 hyper = { version = "0.14.26", features = ["server"] }
 
 # Local paths
+smithy-common = { path = "../../package/smithy-common" }
 geth-agent-client = { path = "../../package/geth-agent-client" }
 geth-agent-server = { path = "../../package/geth-agent-server" }
 hw-info = { path = "../../package/hw-info" }
