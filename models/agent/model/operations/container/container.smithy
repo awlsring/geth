@@ -2,6 +2,9 @@ $version: "2.0"
 
 namespace awlsring.geth.agent
 
+use awlsring.geth.common#StringStringMap
+use awlsring.geth.common#StringList
+
 resource Container {
     identifiers: { id: ContainerId },
     read: GetContainer,

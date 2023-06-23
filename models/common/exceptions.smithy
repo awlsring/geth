@@ -1,6 +1,6 @@
 $version: "2.0"
 
-namespace awlsring.geth.agent
+namespace awlsring.geth.common
 
 @error("client")
 @httpError(400)

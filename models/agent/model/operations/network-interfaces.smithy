@@ -2,6 +2,7 @@ $version: "2.0"
 
 namespace awlsring.geth.agent
 use smithy.framework#ValidationException
+use awlsring.geth.common#ResourceNotFoundException
 
 resource NetworkInterface {
     identifiers: { name: NetworkInterfaceName },
