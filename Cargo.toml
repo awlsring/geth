@@ -1,6 +1,7 @@
 [workspace]
 members = [
 	"apps/agent",
+	"apps/control",
 	"package/hw-info",
 	"package/containers",
 	"package/geth-agent-client",

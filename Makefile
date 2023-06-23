@@ -1,7 +1,5 @@
 SRC_DIR := $(shell git rev-parse --show-toplevel)
 
-all: codegen
-
 agent:
 	cd apps/agent && make
 
@@ -10,3 +8,6 @@ agent-build:
 
 agent-install:
 	cd apps/agent && make install
+
+control:
+	cd apps/control && make

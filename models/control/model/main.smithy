@@ -1,13 +1,13 @@
 $version: "2.0"
 
-namespace awlsring.geth.agent
+namespace awlsring.geth.control
 
 use aws.protocols#restJson1
 use smithy.framework#ValidationException
-use awlsring.geth.common#UnauthorizedException
 use awlsring.geth.common#Health
+use awlsring.geth.common#UnauthorizedException
 
-@title("Geth Agent REST API")
+@title("Geth Control REST API")
 @restJson1
 @httpBearerAuth
 @httpApiKeyAuth(scheme: "ApiKey", name: "Authorization", in: "header")
@@ -16,18 +16,9 @@ use awlsring.geth.common#Health
     outputToken: "nextToken",
     pageSize: "pageSize"
 )
-service GethAgent {
-    version: "2023-06-07",
-    resources: [
-        Container,
-        NetworkInterface,
-        Overview
-        System,
-        Memory,
-        Disk,
-        Volume,
-        Cpu,
-    ],
+service GethControl {
+    version: "2023-06-23",
+    resources: [ Server ],
     operations: [ Health ],
     errors: [ UnauthorizedException ]
 }

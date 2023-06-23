@@ -3,6 +3,5 @@ Cargo.lock
 .vscode
 **/build/*
 **/.gradle
-package/geth-agent-client
-package/geth-agent-server
+package/geth*
 .smithy*

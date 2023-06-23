@@ -1,27 +1,26 @@
 {
     "version": "2.0",
     "imports": [
-        "../common/generic.smithy",
-        "../common/health.smithy",
-        "../common/exceptions.smithy"
+        "../common",
+        "../agent/model/operations"
     ],
     "projections": {
         "proj": {
             "plugins": {
                 "openapi": {
-                    "service": "awlsring.geth.agent#GethAgent",
+                    "service": "awlsring.geth.control#GethControl",
                     "protocol": "aws.protocols#restJson1"
                 },
                 "rust-client-codegen": {
                     "runtimeConfig": {
                         "relativePath": "/home/awlsring/Code/smithy-rs/rust-runtime"
                     },
-                    "service": "awlsring.geth.agent#GethAgent",  
+                    "service": "awlsring.geth.control#GethControl",  
                     "codegen": {
                         "includeFluentClient": true
                     },
-                    "module": "geth-agent-client",
-                    "moduleDescription": "Geth Agent Client",
+                    "module": "geth-control-client",
+                    "moduleDescription": "Geth Control Client",
                     "moduleVersion": "0.1.0",
                     "moduleAuthors": ["awlsring@gmail.com"]
                 },
@@ -29,9 +28,9 @@
                     "runtimeConfig": {
                         "relativePath": "/home/awlsring/Code/smithy-rs/rust-runtime"
                     },
-                    "service": "awlsring.geth.agent#GethAgent",  
-                    "module": "geth-agent-server",
-                    "moduleDescription": "Geth Agent Server",
+                    "service": "awlsring.geth.control#GethControl",  
+                    "module": "geth-control-server",
+                    "moduleDescription": "Geth Control Server",
                     "moduleVersion": "0.1.0",
                     "moduleAuthors": ["awlsring@gmail.com"]
                 }

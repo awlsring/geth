@@ -1,13 +1,11 @@
 $version: "2.0"
 
-namespace awlsring.geth.agent
-use smithy.framework#ValidationException
+namespace awlsring.geth.common
 
 @readonly
 @http(method: "GET", uri: "/health", code: 200)
 operation Health {
     output: HealthOutput,
-    errors: [ValidationException]
 }
 
 @output
