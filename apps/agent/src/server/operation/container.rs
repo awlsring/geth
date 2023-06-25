@@ -1,4 +1,4 @@
-use std::{sync::Arc};
+use std::{sync::Arc, collections::HashMap};
 
 use async_stream::stream;
 use aws_smithy_http_server::Extension;
@@ -6,8 +6,17 @@ use containers::{Container, Port, ContainerProtocol, Volume, Network};
 use geth_agent_server::{output::{StreamContainerLogsOutput, GetContainerOutput, ListContainersOutput, StreamContainerStatisticsOutput}, input::{StreamContainerLogsInput, ListContainersInput, GetContainerInput, StreamContainerStatisticsInput}, error::{self, ResourceNotFoundException}, model::{Logs, LogLine, ContainerSummary, ContainerState, ContainerPortBinding, ContainerPortProtocol, ContainerVolume, ContainerNetwork, ContainerStatistics, ContainerType}};
 use crate::server::http::State;
 
+pub fn containers_to_summaries(conts: &HashMap<String, Container>) -> Vec<ContainerSummary> {
+    let mut summaries = Vec::new();
+    for (_, c) in conts {
+        let sum = container_to_summary(c);
+        summaries.push(sum);
+    }
+
+    summaries
+}
+
 pub fn container_to_summary(container: &Container) -> ContainerSummary {
-    
     let id = container.id().to_string();
     let name = container.name().to_string();
     let image = container.image().to_string();
@@ -212,11 +221,7 @@ pub async fn list_containers(input: ListContainersInput, state: Extension<Arc<St
     let ctl = state.controller.lock().await;
     let containers = ctl.containers();
 
-    let mut summaries = Vec::new();
-    for (_, container) in containers {
-        let summary = container_to_summary(container);
-        summaries.push(summary);
-    }
+    let summaries = containers_to_summaries(containers);
 
     let output = ListContainersOutput { summaries };
     Ok(output)
@@ -251,8 +256,10 @@ pub async fn stream_container_statistics(input: StreamContainerStatisticsInput, 
 }
 
 pub async fn stream_container_logs(input: StreamContainerLogsInput, state: Extension<Arc<State>>) -> Result<StreamContainerLogsOutput, error::StreamContainerLogsError> {
-    
-    let is_true = true;
+    let ctl = state.controller.lock().await;
+    let containers = ctl.containers();
+
+    // let id = input.id.to_string();
 
     let output_stream = stream! {
         let mut i = 0;

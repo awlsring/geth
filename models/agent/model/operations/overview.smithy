@@ -42,4 +42,6 @@ structure OverviewSummary {
 
     @required
     network: NetworkInterfaceSummaries
+
+    containers: ContainerSummaries
 }
