@@ -9,8 +9,183 @@ generator client {
     // The location to generate the client. Is relative to the position of the schema
     output        = "../package/prisma/src/prisma.rs"
 }
+
+enum MachineStatus {
+    RUNNING
+    STOPPED
+    UNKNOWN
+}
+
+model MachineStatusSummary {
+    id Int    @id @default(autoincrement())
+    status MachineStatus
+    lastChecked DateTime @default(now()) @updatedAt
+    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machineId String @unique
+}
+
+model Tag {
+    id    Int    @id @default(autoincrement())
+    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machineId String
+
+    key   String
+    value String
+}
+
+model SystemSummary {
+    id Int    @id @default(autoincrement())
+    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machineId String @unique
+
+    localMachineId String
+    family String
+    kernelVersion String
+    os String
+    osVersion String
+    osPretty String
+    hostname String
+}
+
+model MemorySummary {
+    id Int    @id @default(autoincrement())
+    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machineId String @unique
+
+    swapTotal Int
+    memoryTotal Int   
+}
+
+model CpuSummary {
+    id Int    @id @default(autoincrement())
+    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machineId String @unique
+
+    cores Int
+    architecture String
+    model String?
+    vendor String?
+}
+
+enum DiskType {
+  HDD
+  SSD
+  NVME
+  UNKNOWN
+}
+
+enum DiskInterface {
+  SATA
+  SCSI
+  PCI_E
+  UNKNOWN
+}
+
+model DiskSummary {
+    id Int    @id @default(autoincrement())
+    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machineId String
+
+    device String
+    type DiskType
+    sizeActual String
+    mount String?
+    vendor String?
+    interface DiskInterface?
+    serial String?
+    sectorSize Int?
+    sizeRaw Int?
+}
+
+model VolumeSummary {
+    id Int    @id @default(autoincrement())
+    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machineId String
+
+    name String
+    mountPoint String
+    totalSpace String
+    fileSystem String?
+}
+
+model NetworkInterfaceSummary {
+    id Int    @id @default(autoincrement())
+    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machineId String
+
+    name String
+    addresses String[]
+    virtual Boolean @default(false)
+    macAddress String?
+    vendor String?
+    mtu Int?
+    speed Int?
+    duplex String?
+}
+
+enum AddressVersion {
+  V4
+  V6
+  V6_LOCAL
+}
+
+model AddressSummary {
+    id Int    @id @default(autoincrement())
+    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machineId String
+
+    version AddressVersion
+    address String
+    netmask String?
+    broadcast String?
+}
+
+model ContainerSummary {
+    id Int    @id @default(autoincrement())
+    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machineId String @unique
+
+    containerId String
+    name String
+    image String
+    created DateTime
+    state String
+}
+
+enum MachineType {
+  BARE_METAL
+  HYPERVISOR
+  VIRTUAL_MACHINE
+}
  
-model User {
-    id          String  @id
-    displayName String
+model MachineSummary {
+    id String  @id
+    
+    status MachineStatusSummary?
+
+    group String
+
+    added DateTime
+
+    updated DateTime?
+
+    type MachineType
+
+    tags Tag[]
+
+    system SystemSummary?
+
+    memory MemorySummary?
+
+    cpu CpuSummary?
+
+    disks DiskSummary[]
+
+    volumes VolumeSummary[]
+
+    networkInterfaces NetworkInterfaceSummary[]
+
+    addresses AddressSummary[]
+
+    containers ContainerSummary[]
 }

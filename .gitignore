@@ -5,3 +5,5 @@ Cargo.lock
 **/.gradle
 package/geth*
 .smithy*
+prisma/migrations/*
+.env
