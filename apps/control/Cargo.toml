@@ -10,8 +10,11 @@ tokio = { version = "1.28.2", features = ["full"] }
 serde = { version = "1.0.164", features = ["derive"] }
 tower = "0.4.13"
 clap = { version = "4.3.3", features = ["derive"] }
-hyper = { version = "0.14.26", features = ["server"] }
+hyper = { version = "0.14.26", features = ["server", "client", "http2"] }
+# hyper-rustls = { version = "0.23.0", features = ["http2"] }
 
+prisma = { path = "../../package/prisma" }
+smithy-common = { path = "../../package/smithy-common" }
 geth-agent-client = { path = "../../package/geth-agent-client" }
 geth-control-client = { path = "../../package/geth-control-client" }
 geth-control-server = { path = "../../package/geth-control-server" }

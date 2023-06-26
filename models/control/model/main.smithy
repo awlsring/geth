@@ -18,7 +18,7 @@ use awlsring.geth.common#UnauthorizedException
 )
 service GethControl {
     version: "2023-06-23",
-    resources: [ Server ],
+    resources: [ Machine, Group ],
     operations: [ Health ],
     errors: [ UnauthorizedException ]
 }

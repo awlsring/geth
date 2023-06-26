@@ -11,3 +11,6 @@ agent-install:
 
 control:
 	cd apps/control && make
+
+control-codegen:
+	cd apps/control && make codegen
