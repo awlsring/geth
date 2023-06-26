@@ -130,11 +130,6 @@ list VolumeSummaries {
     member: VolumeSummary
 }
 
-enum VolumeType {
-    HDD = "HDD",
-    SDD = "SSD",
-}
-
 structure VolumeSummary {
     @required
     name: String
@@ -211,6 +206,9 @@ structure MachineSummary {
     @required
     tags: Tags,
 
+    @required
+    type: MachineType
+
     updated: Long
 
     system: SystemSummary
@@ -223,7 +221,7 @@ structure MachineSummary {
 
     volumes: VolumeSummaries
 
-    network: NetworkInterfaceSummaries
+    networkInterfaces: NetworkInterfaceSummaries
 
     addresses: AddressSummaries
 

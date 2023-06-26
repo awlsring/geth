@@ -107,5 +107,5 @@ structure MachineUtilizationSummary {
 
     volumes: VolumeUtilizationSummaries
 
-    network: NetworkInterfaceUtilizationSummaries
+    networkInterfaces: NetworkInterfaceUtilizationSummaries
 }
