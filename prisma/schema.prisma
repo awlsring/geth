@@ -52,8 +52,8 @@ model MemorySummary {
     machine MachineSummary @relation(fields: [machineId], references: [id])
     machineId String @unique
 
-    swapTotal Int
-    memoryTotal Int   
+    swapTotal BigInt
+    memoryTotal BigInt   
 }
 
 model CpuSummary {
@@ -88,13 +88,13 @@ model DiskSummary {
 
     device String
     type DiskType
-    sizeActual String
-    mount String?
+    sizeActual BigInt
+    model String?
     vendor String?
     interface DiskInterface?
     serial String?
     sectorSize Int?
-    sizeRaw Int?
+    sizeRaw BigInt?
 }
 
 model VolumeSummary {
@@ -104,7 +104,7 @@ model VolumeSummary {
 
     name String
     mountPoint String
-    totalSpace String
+    totalSpace BigInt
     fileSystem String?
 }
 
