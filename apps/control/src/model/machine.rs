@@ -136,6 +136,7 @@ pub struct ContainerSummary {
 #[derive(Clone, Debug)]
 pub struct Machine {
     pub(crate) id: Arc<str>,
+    pub(crate) address: Arc<str>,
     pub(crate) group: Arc<str>,
     pub(crate) status: MachineStatusSummary,
     pub(crate) added: DateTime<Utc>,
@@ -156,8 +157,9 @@ impl Machine {
     fn make_id() -> Arc<str> {
         let uuid = Uuid::new_v4();
         let short_uuid = uuid.simple().to_string();
+        let truncated = &short_uuid[..16];
 
-        let id = format!("m-{}", short_uuid);
+        let id = format!("m-{}", truncated);
 
         id.into()
     }
@@ -322,11 +324,16 @@ impl Machine {
         Some(summaries.into())
     }
 
-    pub fn new_from_agent_overview(overview: &OverviewSummary, group: &str) -> Machine {
+    pub fn new_from_agent_overview(
+        overview: &OverviewSummary,
+        address: &str,
+        group: &str,
+    ) -> Machine {
         let now = Utc::now();
 
         Machine {
             id: Machine::make_id(),
+            address: Arc::from(address),
             group: Arc::from(group),
             status: MachineStatusSummary {
                 state: MachineState::Running,

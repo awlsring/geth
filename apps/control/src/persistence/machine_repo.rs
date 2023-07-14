@@ -28,6 +28,7 @@ impl MachinePrismaRepository {
     fn db_to_model(machine: MachineSummaryFull) -> Machine {
         Machine {
             id: machine.id.clone().into(),
+            address: machine.address.clone().into(),
             group: machine.group.clone().into(),
             status: convert_status_summary(machine.status),
             added: machine.added.into(),
@@ -97,11 +98,13 @@ impl Repository<Machine, String> for MachinePrismaRepository {
             .machine_summary()
             .create(
                 item.id.clone().to_string(),
+                item.address.clone().to_string(),
                 item.group.clone().to_string(),
                 item.added.into(),
                 t,
                 vec![],
             )
+            .include(machine_full_summary::include())
             .exec()
             .await;
 

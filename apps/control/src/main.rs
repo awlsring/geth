@@ -33,12 +33,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .await
         .unwrap();
 
-    let prisma_conn_2 = PrismaClient::_builder()
-        .with_url(config.database().url().to_owned())
-        .build()
-        .await
-        .unwrap();
-
     let machine_repo = MachinePrismaRepository::new(prisma_conn);
 
     let agent_service = service::agent::AgentService::new();
@@ -47,20 +41,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
         agent_service,
         machine_repo,
     )));
-    let machine_repo = Arc::new(Mutex::new(
-        persistence::machine_repo::MachinePrismaRepository::new(prisma_conn_2),
-    ));
 
     info!("Starting server loop");
-    server_loop(controller, machine_repo, config.get_server().clone()).await;
+    server_loop(controller, config.get_server().clone()).await;
 
     Ok(())
 }
 
-async fn server_loop(
-    controller: Arc<Mutex<AgentController>>,
-    machine_repo: Arc<Mutex<MachinePrismaRepository>>,
-    config: ServerConfig,
-) {
+async fn server_loop(controller: Arc<Mutex<AgentController>>, config: ServerConfig) {
     start_server(controller, config).await;
 }

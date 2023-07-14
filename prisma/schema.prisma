@@ -161,6 +161,8 @@ enum MachineType {
 model MachineSummary {
     id String  @id
     
+    address String @unique
+
     status MachineStatusSummary?
 
     group String

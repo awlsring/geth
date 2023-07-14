@@ -1,7 +1,9 @@
 use std::sync::Arc;
 
+use http::Version;
+
 use crate::{
-    model::machine::Machine,
+    model::machine::{AddressVersion, Machine},
     persistence::{machine_repo::MachinePrismaRepository, repository::Repository},
     service::agent::AgentService,
 };
@@ -18,15 +20,15 @@ impl AgentController {
 
     pub async fn register_machine(
         &mut self,
-        endpoint: &str,
+        address: &str,
         group: &str,
     ) -> Result<Machine, String> {
-        let overview = self.service.get_server_overview(endpoint).await;
+        let overview = self.service.get_server_overview(address).await;
 
         match overview {
             Ok(o) => match o.summary() {
                 Some(s) => {
-                    let machine = Machine::new_from_agent_overview(s, group);
+                    let machine = Machine::new_from_agent_overview(s, address, group);
                     let insert_result = self.repo.insert(machine.clone()).await;
                     match insert_result {
                         Ok(_) => Ok(machine),
@@ -46,6 +48,12 @@ impl AgentController {
             None => Err("Machine not found".to_string()),
         }
     }
+
+    // pub async fn get_machine_utilization(&mut self, machine_id: &str) {
+    //     let machine = self.repo.find_by_id(machine_id.to_string()).await;
+
+    //     let overview = self.service.get_server_overview(endpoint).await;
+    // }
 
     pub async fn list_machines(&mut self) -> Arc<[Machine]> {
         self.repo.find_all().await
