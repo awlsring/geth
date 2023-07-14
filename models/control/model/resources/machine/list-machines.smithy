@@ -22,5 +22,5 @@ structure ListMachinesInput {}
 @output
 structure ListMachinesOutput {
     @required
-    summary: MachineSummaries
+    summaries: MachineSummaries
 }

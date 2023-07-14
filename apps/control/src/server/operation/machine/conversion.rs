@@ -3,7 +3,9 @@ use geth_control_server::model::{
     NetworkInterfaceSummary, SystemSummary, Tag, TagString,
 };
 
-use crate::model::machine::{AddressVersion, DiskInterface, DiskType, Machine, MachineState};
+use crate::model::machine::{
+    AddressVersion, DiskInterface, DiskType, Machine, MachineState, MachineType,
+};
 
 pub fn machine_to_summary(machine: Machine) -> MachineSummary {
     MachineSummary {
@@ -13,6 +15,11 @@ pub fn machine_to_summary(machine: Machine) -> MachineSummary {
             MachineState::Running => MachineStatus::Running,
             MachineState::Stopped => MachineStatus::Stopped,
             MachineState::Unknown => MachineStatus::Unknown,
+        },
+        r#type: match machine.machine_type {
+            MachineType::VirtualMachine => geth_control_server::model::MachineType::VirtualMachine,
+            MachineType::BareMetal => geth_control_server::model::MachineType::BareMetal,
+            MachineType::Hypervisor => geth_control_server::model::MachineType::Hypervisor,
         },
         added: machine.added.timestamp(),
         tags: machine
@@ -55,7 +62,7 @@ pub fn machine_to_summary(machine: Machine) -> MachineSummary {
             }),
             None => None,
         },
-        network: match machine.network_interfaces {
+        network_interfaces: match machine.network_interfaces {
             Some(n) => {
                 let mut interfaces = Vec::new();
                 for interface in n.iter() {

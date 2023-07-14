@@ -68,7 +68,7 @@ impl Repository<Machine, String> for MachinePrismaRepository {
         let results = self
             .conn
             .machine_summary()
-            .find_many(vec![machine_summary::id::equals("".to_string())])
+            .find_many(vec![])
             .include(machine_full_summary::include())
             .exec()
             .await

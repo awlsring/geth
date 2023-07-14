@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use crate::{
     model::machine::Machine,
     persistence::{machine_repo::MachinePrismaRepository, repository::Repository},
@@ -43,5 +45,9 @@ impl AgentController {
             Some(m) => Ok(m),
             None => Err("Machine not found".to_string()),
         }
+    }
+
+    pub async fn list_machines(&mut self) -> Arc<[Machine]> {
+        self.repo.find_all().await
     }
 }
