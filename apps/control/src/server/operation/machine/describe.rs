@@ -13,7 +13,7 @@ pub async fn describe_machine(
 ) -> Result<DescribeMachineOutput, error::DescribeMachineError> {
     let mut controller = state.controller.lock().await;
 
-    let machine_result = controller.get_machine_summary(input.id()).await;
+    let machine_result = controller.get_machine(input.id()).await;
 
     match machine_result {
         Ok(m) => {

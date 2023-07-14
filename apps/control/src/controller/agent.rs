@@ -39,7 +39,7 @@ impl AgentController {
         }
     }
 
-    pub async fn get_machine_summary(&mut self, machine_id: &str) -> Result<Machine, String> {
+    pub async fn get_machine(&mut self, machine_id: &str) -> Result<Machine, String> {
         let machine = self.repo.find_by_id(machine_id.to_string()).await;
         match machine {
             Some(m) => Ok(m),
