@@ -449,7 +449,7 @@ impl Repository<Machine, String> for MachinePrismaRepository {
 
         match result {
             Ok(_) => return Ok(()),
-            Err(_) => return Err("item".to_string()),
+            Err(e) => return Err(e.to_string()),
         }
     }
 }

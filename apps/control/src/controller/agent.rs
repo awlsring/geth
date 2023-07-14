@@ -50,4 +50,12 @@ impl AgentController {
     pub async fn list_machines(&mut self) -> Arc<[Machine]> {
         self.repo.find_all().await
     }
+
+    pub async fn remove_machine(&mut self, machine_id: &str) -> Result<(), String> {
+        let delete_result = self.repo.delete(machine_id.to_string()).await;
+        match delete_result {
+            Ok(_) => Ok(()),
+            Err(e) => Err(e),
+        }
+    }
 }

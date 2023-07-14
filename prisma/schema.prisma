@@ -20,13 +20,13 @@ model MachineStatusSummary {
     id Int    @id @default(autoincrement())
     status MachineStatus
     lastChecked DateTime @default(now()) @updatedAt
-    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machine MachineSummary @relation(fields: [machineId], references: [id], onDelete: Cascade)
     machineId String @unique
 }
 
 model Tag {
     id    Int    @id @default(autoincrement())
-    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machine MachineSummary @relation(fields: [machineId], references: [id], onDelete: Cascade)
     machineId String
 
     key   String
@@ -35,7 +35,7 @@ model Tag {
 
 model SystemSummary {
     id Int    @id @default(autoincrement())
-    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machine MachineSummary @relation(fields: [machineId], references: [id], onDelete: Cascade)
     machineId String @unique
 
     localMachineId String
@@ -49,7 +49,7 @@ model SystemSummary {
 
 model MemorySummary {
     id Int    @id @default(autoincrement())
-    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machine MachineSummary @relation(fields: [machineId], references: [id], onDelete: Cascade)
     machineId String @unique
 
     swapTotal BigInt
@@ -58,7 +58,7 @@ model MemorySummary {
 
 model CpuSummary {
     id Int    @id @default(autoincrement())
-    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machine MachineSummary @relation(fields: [machineId], references: [id], onDelete: Cascade)
     machineId String @unique
 
     cores Int
@@ -83,7 +83,7 @@ enum DiskInterface {
 
 model DiskSummary {
     id Int    @id @default(autoincrement())
-    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machine MachineSummary @relation(fields: [machineId], references: [id], onDelete: Cascade)
     machineId String
 
     device String
@@ -99,7 +99,7 @@ model DiskSummary {
 
 model VolumeSummary {
     id Int    @id @default(autoincrement())
-    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machine MachineSummary @relation(fields: [machineId], references: [id], onDelete: Cascade)
     machineId String
 
     name String
@@ -110,7 +110,7 @@ model VolumeSummary {
 
 model NetworkInterfaceSummary {
     id Int    @id @default(autoincrement())
-    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machine MachineSummary @relation(fields: [machineId], references: [id], onDelete: Cascade)
     machineId String
 
     name String
@@ -131,7 +131,7 @@ enum AddressVersion {
 
 model AddressSummary {
     id Int    @id @default(autoincrement())
-    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machine MachineSummary @relation(fields: [machineId], references: [id], onDelete: Cascade)
     machineId String
 
     version AddressVersion
@@ -142,7 +142,7 @@ model AddressSummary {
 
 model ContainerSummary {
     id Int    @id @default(autoincrement())
-    machine MachineSummary @relation(fields: [machineId], references: [id])
+    machine MachineSummary @relation(fields: [machineId], references: [id], onDelete: Cascade)
     machineId String @unique
 
     containerId String
