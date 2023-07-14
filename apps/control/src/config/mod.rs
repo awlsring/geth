@@ -6,6 +6,7 @@ use log::{warn, debug};
 #[derive(Debug, Deserialize)]
 pub struct Config {
     server: ServerConfig,
+    db: DatabaseConfig,
 }
 
 impl Default for Config {
@@ -16,6 +17,10 @@ impl Default for Config {
                 allowed_keys: vec![String::from("toes")],
                 no_auth_operations: vec![String::from("Health")],
             },
+            db: DatabaseConfig {
+                database_type: String::from("postgresql"),
+                url: env::var("DATABASE_URL").expect("DATABASE_URL must be set"),
+            },
         }
     }
 
@@ -23,6 +28,10 @@ impl Default for Config {
 impl Config {
     pub fn get_server(&self) -> &ServerConfig {
         &self.server
+    }
+
+    pub fn database(&self) -> &DatabaseConfig {
+        &self.db
     }
 }
 
@@ -46,6 +55,23 @@ impl ServerConfig {
         &self.no_auth_operations
     }
 }
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct DatabaseConfig {
+    database_type: String,
+    url: String,
+}
+
+impl DatabaseConfig {
+    pub fn db_type(&self) -> &String {
+        &self.database_type
+    }
+
+    pub fn url(&self) -> &String {
+        &self.url
+    }
+}
+
 
 pub fn load_config() -> Config {
     let path = env::var("CONFIG_PATH").unwrap_or_else(|_| "config.toml".to_string());
