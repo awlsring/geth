@@ -2,6 +2,7 @@
 members = [
 	"apps/agent",
 	"apps/control",
+	"apps/frontend",
 	"package/hw-info",
 	"package/containers",
 	"package/prisma",
