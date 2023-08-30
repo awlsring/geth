@@ -20,7 +20,7 @@ thiserror = "1.0.38"
 tracing = { version = "0.1.37", optional = true }
 http = "0.2.8"
 itertools = "0.11.0"
-leptos_icons = { version = "0.0.15", features = ["macros", "FaServerSolid", "FaBucketSolid", "FaRobotSolid", "FaHardDriveSolid", "FaCircleInfoSolid", "FaGearSolid", "BsCircleFill", "BsCardText", "BsCardList", "BsEthernet", "BiNetworkChartSolid"] }
+leptos_icons = { version = "0.0.15", features = ["macros", "FaServerSolid", "FaBucketSolid", "FaRobotSolid", "FaHardDriveSolid", "FaCircleInfoSolid", "FaGearSolid", "BsCircleFill", "BsCardText", "BsCardList", "BsEthernet", "BiNetworkChartSolid", "BsThreeDots"] }
 chrono = "0.4.26"
 serde = "1.0.174"
 include_dir = "0.7.3"

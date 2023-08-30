@@ -7,7 +7,7 @@ use smithy.framework#ValidationException
 use awlsring.geth.common#ResourceNotFoundException
 
 @readonly
-@http(method: "GET", uri: "/machine/{id}", code: 200)
+@http(method: "GET", uri: "/machine/{identifier}", code: 200)
 operation DescribeMachine {
     input: DescribeMachineInput,
     output: DescribeMachineOutput,
@@ -21,7 +21,7 @@ operation DescribeMachine {
 structure DescribeMachineInput {
     @httpLabel
     @required
-    id: MachineId,
+    identifier: MachineId,
 }
 
 @output
