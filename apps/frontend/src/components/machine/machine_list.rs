@@ -1,9 +1,8 @@
-use chrono::format;
 use geth_control_client::types::{
     AddressSummary, AddressVersion, CpuSummary, MachineArchitecture, MachineClass, MachineStatus,
     MachineStatusSummary, MachineSummary, MemorySummary, OperatingSystemSummary, StorageSummary,
 };
-use leptos::{html::S, *};
+use leptos::*;
 use leptos_icons::*;
 
 #[component]

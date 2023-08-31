@@ -13,6 +13,7 @@ use leptos::*;
 
 use crate::components::machine::{list_header::Header, machine_list::MachineList};
 
+//tmp machine list for ui dev
 pub fn fetch_machines() -> Vec<MachineSummary> {
     let machine = MachineSummaryBuilder::default()
         .identifier("m-12823764234876".to_string())
@@ -118,6 +119,7 @@ pub fn fetch_machines() -> Vec<MachineSummary> {
 
 #[component]
 pub fn Machines(cx: Scope) -> impl IntoView {
+    log!("Loading machine list");
     let (machines, set_machines) = create_signal(cx, Vec::<MachineSummary>::new());
     set_machines(fetch_machines());
     view! { cx,

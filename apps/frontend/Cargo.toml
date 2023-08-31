@@ -27,3 +27,4 @@ include_dir = "0.7.3"
 pulldown-cmark = "0.9.3"
 gray_matter = "0.2.6"
 geth-control-client = { path = "../../package/geth-control-client",  default-features = false }
+aws-smithy-client = { path = "/home/awlsring/Code/smithy-rs/rust-runtime/aws-smithy-client/" }
