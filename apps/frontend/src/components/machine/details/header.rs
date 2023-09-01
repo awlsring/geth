@@ -4,10 +4,13 @@ use leptos_icons::*;
 #[component]
 pub fn DetailHeader(cx: Scope, id: String) -> impl IntoView {
     view! { cx,
-        <header class="flex items-center justify-between bg-gray-100 px-4">
+        <header class="flex items-center justify-between px-4">
             <div class="flex items-center">
-                <h1 class="text-2xl text-gray-700">{ "Machines" }</h1>
-                <h1 class="text-large font-semibold pt-1 px-2">{ format!("/ {}", id) }</h1>
+                <a href={ "/machines" }>
+                    <h1 class="text-2xl text-gray-600 hover:text-emerald-800">{ "Machines" }</h1>
+                </a>
+                <h1 class="text-xl text-gray-600 px-1">{ "/" }</h1>
+                <h1 class="text-large font-semibold pt-1 pr-1">{ id }</h1>
             </div>
             <div class="flex space-x-4 p-1">
                 <div class="p-1">

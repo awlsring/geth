@@ -4,7 +4,7 @@ use leptos_icons::*;
 #[component]
 pub fn Header(cx: Scope) -> impl IntoView {
     view! { cx,
-        <header class="flex items-center justify-between bg-gray-100 px-4">
+        <header class="flex items-center justify-between px-4">
             <div class="flex items-center">
                 <h1 class="text-2xl font-semibold">{"Machines"}</h1>
             </div>
